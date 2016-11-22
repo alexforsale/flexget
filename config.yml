@@ -1,0 +1,186 @@
+#
+# Author: Christian Alexander <alexforsale@yahoo.com>#
+#
+secrets: secrets.yml
+
+templates:
+
+  transmission-global:
+    transmission:
+      enabled: yes
+      host: localhost
+      port: 9091
+      username: transmission #'\{{ secrets.user }}'
+      password: transmission  #'\{{ secrets.password }}'
+      ratio: 1
+      include_subs: yes
+      path: /mnt/TOSHIBA/Movies/{{transmission-path}}/
+
+  rssout:
+    make_rss:
+      encoding: utf-8
+      file: '/home/{{ secrets.user }}/downloads.rss'
+      days: 1
+#
+#
+#
+  rss-tv:
+    inputs:
+      - rss: { url: 'https://eztv.ag/ezrss.xml' }
+      - rss: { url: 'http://www.torlock.com/television/rss.xml' }
+      - rss: { url: 'https://rarbg.to/rssdd.php?category=tv' }
+    content_size:
+      max: 8000
+      min: 20
+
+  rss-anime:
+    inputs:
+      - rss: { url: 'http://www.nyaa.eu/?page=rss&cats=1_37&term=horriblesubs&filter=2' }
+      - rss: { url: 'http://www.shanaproject.com/feeds/user/38788/' }
+      - rss: { url: 'http://www.shanaproject.com/feeds/secure/user/38788/7ZTAXAUBMJ/' }
+    content_size:
+      max: 8000
+      min: 20
+
+  rss-movies:
+    inputs:
+      - rss: { url: 'https://kat.am/movies/?rss=1' }
+      - rss: { url: 'https://yts.ag/rss' }
+      - rss: { url: 'https://rarbg.to/rssdd.php?category=movies' }
+    content_size:
+      max: 8000
+      min: 20    
+#
+#
+#
+
+  tv:
+    set:
+      transmission-path: Series/{{tvdb_series_name}}
+      label: tv
+    exists_series:
+      - /mnt/TOSHIBA/Movies/Series
+    configure_series:
+      from:
+        thetvdb_list:
+          username: '\{{ secrets.thetvdb.user }}'
+          account_id: '\{{ secrets.thetvdb.id }}'
+    configure_series:
+      from:
+        filesystem:
+          - /mnt/TOSHIBA/Movies/Series
+    thetvdb_lookup: yes
+    series:
+      settings:
+        tv:
+          quality: hdtv h264
+
+  movies:
+    set:
+      transmission-path: Movies
+      label: movies
+    exists_movie:
+      path: /mnt/TOSHIBA/Movies/Movies
+      lookup: imdb
+      allow_different_qualities: better
+    imdb_lookup: yes
+    quality: dvdrip+
+    torrent_alive: 10
+    list_match:
+      from:
+        - movie_list: mymovies
+    regexp:
+      from: title
+      reject:
+        - msd
+        - afg
+        - line
+        - hc
+        - korsub
+
+  anime:
+    set:
+      transmission-path: anime/{{series_name}}
+      label: anime
+    exists_series:
+      - /mnt/TOSHIBA/Movies/anime/{{series_name}}
+    configure_series:
+      from:
+        filesystem:
+          - /mnt/TOSHIBA/Movies/anime
+    thetvdb_lookup: yes
+#
+#
+#
+
+tasks:
+
+  tv-download:
+    priority: 1
+    template: [transmission-global, tv, rss-tv, rssout]
+
+  movies-download:
+    priority: 4
+    template: [transmission-global, movies, rss-movies, rssout]
+
+  anime-downloads:
+    priority: 5
+    template: [transmission-global, anime, rss-anime, rssout]
+
+  import-movie-list:
+    trakt_list:
+      username: '\{{ secrets.trakt.user }}'
+      account: '\{{ secrets.trakt.account }}'
+      list: watchlist
+      type: movies
+    accept_all: yes
+    seen: local
+    list_add:
+      - movie_list: mymovies
+
+# piratebay
+  movies-search:
+    trakt_lookup: yes
+    priority: 10
+    discover:
+      what:
+        - movie_list: mymovies
+      from:
+        - piratebay: yes
+      interval: 6 hours
+    torrent_alive: 10
+    quality: dvdrip+
+    list_match:
+      from:
+        - movie_list: watchlist
+    transmission: yes
+
+  emailfeed:
+    rss:
+      url: '/home/{{ secrets.user }}/downloads.rss'
+    disable: [ seen ]
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    imdb_lookup: yes
+    tmdb_lookup: yes
+    accept_all: no
+    email:
+      from: '\{{ secrets.email.from }}'
+      to: '\{{ secrets.email.to }}'
+      subject: 'Flexget'
+      template: html
+      smtp_host: smtp.gmail.com
+      smtp_port: 587
+      smtp_username: '\{{ secrets.email.smtp-user }}'
+      smtp_password: '\{{ secrets.email.smtp-pass }}'
+      smtp_tls: yes
+    interval: 1 days
+
+schedules:
+
+  - tasks: [tv-download, anime-download]
+    interval:
+      hours: 2
+  - tasks: [import-movie-list, movies-download]
+    interval:
+      hours: 4
