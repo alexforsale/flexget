@@ -1,0 +1,2 @@
+# flexget
+konfigurasi untuk flexget
