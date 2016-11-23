@@ -51,3 +51,9 @@ ubah "umask": 18 menjadi 2 dan start kembali
 
 	sudo service transmission-daemon start
 
+Instalasi
+-------
+
+cukup clone ke ~/.flexget
+
+tentunya itu setelah sebelumnya install flexget, informasinya di[sini](http://flexget.com/Install)
