@@ -168,7 +168,7 @@ tasks:
     priority: 2
     template: [transmission-global, movies, rss-movies, rssout]
 
-  anime-downloads:
+  anime-download:
     priority: 3
     template: [transmission-global, anime, rss-anime, rssout]
 
@@ -306,12 +306,28 @@ tasks:
       on_exit:
         phase: find /home/alexforsale/torrent/anime/* -type d -empty -delete
 
+
+# hapus list transmission yang sudah selesai didownload lebih dari 1 jam
+  clean-up:
+    clean_transmission:
+      host: localhost
+      port: 9091
+      username: transmission
+      password: transmission
+      finished_for: 1 hours
+    disable: details
+
 # bisa juga dicantumkan dalam task, seperti di task movies-search
 schedules:
+
+  - tasks: [move-series, move-movies, move-anime, clean-up]
+    interval:
+      hours: 1
 
   - tasks: [tv-download, anime-download]
     interval:
       hours: 2
+
   - tasks: [import-movie-list, movies-download]
     interval:
       hours: 4
