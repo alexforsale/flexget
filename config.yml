@@ -72,7 +72,7 @@ templates:
     set:
       label: tv
     transmission:
-      path: /home/alexforsale/torrent/Series/{{tvdb_series_name}}
+      path: '/home/{{ secrets.user }}/torrent/Series/{{tvdb_series_name}}'
 # scrape folder tujuan agar tidak terjadi download double
     exists_series:
       - /mnt/TOSHIBA/Movies/Series
@@ -111,7 +111,7 @@ templates:
     set:
       label: movies
     transmission:
-      path: /home/alexforsale/torrent/Movies
+      path: '/home/{{ secrets.user }}/torrent/Movies'
     exists_movie:
       path: /mnt/TOSHIBA/Movies/Movies
       lookup: imdb
@@ -142,7 +142,7 @@ templates:
     set:
       label: anime
     transmission:
-      path: /home/alexforsale/torrent/anime/{{series_name}}
+      path: '/home/{{ secrets.user }}/torrent/anime/{{series_name}}'
     exists_series:
       - /mnt/TOSHIBA/Movies/anime/{{series_name}}
 # sama dengan tv series, penambahan anime baru cukup dengan membuat
@@ -241,7 +241,7 @@ tasks:
     metainfo_series: yes
     thetvdb_lookup: yes
     filesystem:
-      path: /home/alexforsale/torrent/Series/
+      path: '/home/{{ secrets.user }}/torrent/Series/'
       recursive: yes
       retrieve: files
       regexp: '.*\.(avi|mkv|mp4)$'
@@ -256,7 +256,7 @@ tasks:
           - subs
     exec:
       on_exit:
-        phase: find /home/alexforsale/torrent/Series/* -type d -empty -delete
+        phase: find /home/{{ secrets.user }}/torrent/Series/* -type d -empty -delete
 
 # pindahkan file dari folder download ke exists
   move-movies:
@@ -268,7 +268,7 @@ tasks:
     metainfo_series: yes
     thetvdb_lookup: yes
     filesystem:
-      path: /home/alexforsale/torrent/Movies/
+      path: '/home/{{ secrets.user }}/torrent/Movies/'
       recursive: yes
       retrieve: files
       regexp: '.*\.(avi|mkv|mp4)$'
@@ -282,7 +282,7 @@ tasks:
           - subs
     exec:
       on_exit:
-        phase: find /home/alexforsale/torrent/Movies/* -type d -empty -delete
+        phase: find /home/{{ secrets.user }}/torrent/Movies/* -type d -empty -delete
 
 # pindahkan file dari folder download ke exists
   move-anime:
@@ -294,7 +294,7 @@ tasks:
     parsing:
       series: guessit
     filesystem:
-      path: /home/alexforsale/torrent/anime/
+      path: '/home/{{ secrets.user }}/torrent/anime/'
       recursive: yes
       retrieve: files
       regexp: '.*\.(avi|mkv|mp4)$'
@@ -304,7 +304,7 @@ tasks:
     exec:
       allow_background: yes
       on_exit:
-        phase: find /home/alexforsale/torrent/anime/* -type d -empty -delete
+        phase: find /home/{{ secrets.user }}/torrent/anime/* -type d -empty -delete
 
 
 # hapus list transmission yang sudah selesai didownload lebih dari 1 jam
