@@ -1,9 +1,28 @@
 Flexget Configuration File
 ========
 
-konfigurasi flexget dengan support file secrets.
+Konfigurasi flexget dengan support file secrets. Jelas bukan penggunaan yang sangat "menyeluruh",
+tapi cukup sesuai untuk penggunaan pribadi.
 
-note untuk folder /home/{{ user }}/Series, /home/{{ user }}/Movies dan /home/{{ user }}/anime perlu diubah permissionnya
+Saat ini fitur yang berjalan:
+* mengimpor list database tv series dari thetvdb.com
+* mengimpor list database movies dari trakt.tv
+* mengimpor list database anime berdasarkan nama folder (cukup membuat folder baru dengan nama anime yang akan didownload)
+* mencari torrent dari rss secara berkala
+* memindahkan torrent yang selesai didownload ke folder target
+* menghapus list torrent yang selesai didownload dari transmission
+* notifikasi melalui pushbullet
+* email daily dalam bentuk html
+
+Dependencies:
+--------
+
+* flexget
+* transmission-daemon
+* Linux (jelas)
+* lupa, sepertinya ada lagi
+
+Note untuk folder /home/{{ user }}/Series, /home/{{ user }}/Movies dan /home/{{ user }}/anime perlu diubah permissionnya.
 
 
 	sudo usermod -a -G debian-transmission {{ user }}
