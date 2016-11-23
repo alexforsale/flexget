@@ -74,8 +74,7 @@ templates:
     transmission:
       path: '/home/{{ secrets.user }}/torrent/Series/{{tvdb_series_name}}'
 # scrape folder tujuan agar tidak terjadi download double
-    exists_series:
-      - /mnt/TOSHIBA/Movies/Series
+    exists_series: '{{ secrets.folder.series }}'
 # penambahan tv series baru bisa dari banyak sumber
     configure_series:
 # untuk thetvdb.com perlu registrasi dan mengisi list tv series disana
@@ -113,7 +112,7 @@ templates:
     transmission:
       path: '/home/{{ secrets.user }}/torrent/Movies'
     exists_movie:
-      path: /mnt/TOSHIBA/Movies/Movies
+      path: '{{ secrets.folder.movies }}'
       lookup: imdb
 # boleh double asal quality better
       allow_different_qualities: better
@@ -143,14 +142,13 @@ templates:
       label: anime
     transmission:
       path: '/home/{{ secrets.user }}/torrent/anime/{{series_name}}'
-    exists_series:
-      - /mnt/TOSHIBA/Movies/anime/{{series_name}}
+    exists_series: '{{ secrets.folder.anime }}'
 # sama dengan tv series, penambahan anime baru cukup dengan membuat
 # folder baru sesuai dengan nama anime yang akan didownload.
     configure_series:
       from:
         filesystem:
-          - /mnt/TOSHIBA/Movies/anime
+          - '{{ secrets.folder.anime }}'
     thetvdb_lookup: yes
     pushbullet:
       apikey: "{{ secrets.pushbullet.apikey }}"
@@ -200,7 +198,7 @@ tasks:
     quality: dvdrip+
     template: [transmission-global, rssout]
     transmission:
-      path: /mnt/TOSHIBA/Movies/Movies
+      path: '{{ secrets.folder.movies }}'
     set:
       label: movies
     pushbullet:
@@ -247,7 +245,7 @@ tasks:
       regexp: '.*\.(avi|mkv|mp4)$'
     accept_all: yes
     move:
-      to: '/mnt/TOSHIBA/Movies/Series/{{tvdb_series_name}}'
+      to: "/{{ secrets.folder.series }}/{{tvdb_series_name}}/"
       along:
         extensions:
           - srt
@@ -273,7 +271,7 @@ tasks:
       retrieve: files
       regexp: '.*\.(avi|mkv|mp4)$'
     move:
-      to: '/mnt/TOSHIBA/Movies/Movies'
+      to: "/{{ secrets.folder.movies}}/"
       along:
         extensions:
           - srt
@@ -300,7 +298,7 @@ tasks:
       regexp: '.*\.(avi|mkv|mp4)$'
     metainfo_series: yes
     move:
-      to: '/mnt/TOSHIBA/Movies/anime/{{series_name}}'
+      to: "/{{ secrets.folder.anime }}/{{series_name}}/"
     exec:
       allow_background: yes
       on_exit:
