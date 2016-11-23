@@ -245,7 +245,7 @@ tasks:
       regexp: '.*\.(avi|mkv|mp4)$'
     accept_all: yes
     move:
-      to: "/{{ secrets.folder.series }}/{{tvdb_series_name}}/"
+      to: "/{{ secrets.folder.series }}/{{tvdb_series_name}}/Season {{tvdb_season}}"
       along:
         extensions:
           - srt
