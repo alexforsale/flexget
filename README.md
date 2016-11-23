@@ -1,2 +1,4 @@
-# flexget
-konfigurasi untuk flexget
+Flexget Configuration File
+========
+
+konfigurasi flexget dengan support file secrets.
