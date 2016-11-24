@@ -2,7 +2,10 @@ Flexget Configuration File
 ========
 
 Konfigurasi flexget dengan support file secrets. Jelas bukan penggunaan yang sangat "menyeluruh",
-tapi cukup sesuai untuk penggunaan pribadi.
+tapi cukup sesuai untuk penggunaan pribadi. Cukup menambahkan folder series, Movies, dan anime kedalam library [kodi](https://kodi.tv/)
+dan semuanya berjalan dengan (hampir) otomatis.
+
+Note: ini masih work in progress
 
 Saat ini fitur yang berjalan:
 * mengimpor list database tv series dari thetvdb.com
