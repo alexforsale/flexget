@@ -5,6 +5,26 @@ secrets: secrets.yml
 
 templates:
 
+# reject secara global
+  reject:
+    regexp:
+      reject:
+        - (s|d)ub(s|bed|lado|titulado)?\b
+        - \bdual\b
+        - \b3d\b
+        - \b(fr)(ench)?\b
+        - \b(ita)(lian)?\b
+        - \b(spa)(nish)?\b
+        - \b(ger)(man)?\b
+        - \bcastellano\b
+        - \brus(sian)?\b
+        - \bportugese?\b
+    content_filter:
+      reject:
+        - '*.rar'
+        - '*.zip'
+
+
 # setting global untuk transmission-daemon
 # perlu disesuaikan dengan konfigurasi transmission di /etc/transmission-daemon/settings.json
   transmission-global:
