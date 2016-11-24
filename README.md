@@ -53,6 +53,13 @@ ubah "umask": 18 menjadi 2 dan start kembali
 
 	sudo service transmission-daemon start
 
+Jalankan task populate-series-db minimal sekali untuk membaca file yang sudah ada didalam library
+
+	flexget execute --tasks seed-series-db --disable-advancement --learn
+
+minimal sekali setelah set up flexget untuk pertama kalinya, atau jika menambah serie baru yang sudah ada beberapa
+didownload
+
 Instalasi
 -------
 

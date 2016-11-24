@@ -435,6 +435,7 @@ tasks:
           retrieve: dirs
       settings:
         tracking: no
+    manual: yes
 
 # bisa juga dicantumkan dalam task, seperti di task movies-search
 schedules:
