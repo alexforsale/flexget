@@ -15,7 +15,6 @@ Saat ini fitur yang berjalan:
 * memindahkan torrent yang selesai didownload ke folder target
 * menghapus list torrent yang selesai didownload dari transmission
 * notifikasi melalui pushbullet
-* email daily dalam bentuk html
 
 Dependencies:
 --------

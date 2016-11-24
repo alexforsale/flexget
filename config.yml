@@ -3,6 +3,7 @@
 #
 secrets: secrets.yml
 
+
 templates:
 
 # reject secara global
@@ -41,13 +42,6 @@ templates:
       retry_time_multiplier: 1
       max_retries: 4
 
-# berfungsi untuk generate rss
-  rssout:
-    make_rss:
-      encoding: utf-8
-      file: '/home/{{ secrets.user }}/downloads.rss'
-      days: 1
-
 # list rss
   rss-tv:
     inputs:
@@ -56,12 +50,6 @@ templates:
       - rss: { url: 'https://rarbg.to/rssdd.php?category=tv' }
       - rss: { url: 'http://extratorrent.cc/rss.xml?cid=8&type=last' }
       - rss: { url: 'https://www.limetorrents.cc/rss/20/' }
-# filter pertama untuk file yang akan didownload berdasarkan dari size
-# pastikan juga filter ini masuk range dari quality yang dicantumkan
-# untuk tv show dengan filter quality "!720p+"
-    content_size:
-      max: 900
-      min: 20
 
 # 2 rss dari shanaproject ini hanya contoh, belum terisi oleh daftar anime
   rss-anime:
@@ -71,10 +59,6 @@ templates:
       - rss: { url: 'https://www.limetorrents.cc/rss/1/' }
       - rss: { url: 'http://www.shanaproject.com/feeds/user/38788/' }
       - rss: { url: 'http://www.shanaproject.com/feeds/secure/user/38788/7ZTAXAUBMJ/' }
-# untuk anime 300mb+ sudah keterlaluan
-    content_size:
-      max: 400
-      min: 20
 
   rss-movies:
     inputs:
@@ -83,9 +67,6 @@ templates:
       - rss: { url: 'https://rarbg.to/rssdd.php?category=movies' }
       - rss: { url: 'http://extratorrent.cc/rss.xml?cid=4&type=last' }
       - rss: { url: 'https://www.limetorrents.cc/rss/16/' }
-    content_size:
-      max: 4000
-      min: 20    
 
 # template untuk TV series
   tv:
@@ -94,7 +75,8 @@ templates:
     transmission:
       path: '/home/{{ secrets.user }}/torrent/Series/{{tvdb_series_name}}'
 # scrape folder tujuan agar tidak terjadi download double
-    exists_series: '{{ secrets.folder.series }}'
+    exists_series: 
+      path: '{{ secrets.folder.series }}'
 # penambahan tv series baru bisa dari banyak sumber
     configure_series:
 # untuk thetvdb.com perlu registrasi dan mengisi list tv series disana
@@ -117,6 +99,7 @@ templates:
         tv:
 # untuk list quality bisa dilihat di http://flexget.com/Plugins/quality
           quality: "!720p+"
+          identified_by: ep
 # pushbullet yang nantinya akan mengirim notifikasi jika ada file yang didownload
 # bisa ditentukan jika ingin hanya kirim ke device tertentu dengan tambahan 'device:'
 # berguna untuk mengirim notifikasi ke android, atau ke chrome/chromium
@@ -180,15 +163,127 @@ tasks:
 
   tv-download:
     priority: 1
-    template: [transmission-global, tv, rss-tv, rssout]
+    template: [transmission-global, reject, tv, rss-tv]
+    torrent_alive: 10
+# filter pertama untuk file yang akan didownload berdasarkan dari size
+# pastikan juga filter ini masuk range dari quality yang dicantumkan
+# untuk tv show dengan filter quality "!720p+"
+    content_size:
+      max: 900
+      min: 20
+
+# prioritas download pertama
+    transmission:
+      queue_position: 0
 
   movies-download:
     priority: 2
-    template: [transmission-global, movies, rss-movies, rssout]
+    template: [transmission-global, reject, movies, rss-movies]
+    torrent_alive: 10
+# prioritas download pertama
+    transmission:
+      queue_position: 0
+    content_size:
+      max: 4000
+      min: 20    
 
   anime-download:
     priority: 3
-    template: [transmission-global, anime, rss-anime, rssout]
+    template: [transmission-global, anime, rss-anime]
+    torrent_alive: 10
+# untuk anime 300mb+ sudah keterlaluan
+    content_size:
+      max: 400
+      min: 20
+
+
+# cari dan download episode sebelumnya yang tersedia dipiratebay, extratorrent
+# atau limetorrent. Note jika jumlah series yang tercantum di list thetvdb atau
+# di target folder series ada banyak, jangan kaget kalau jumlah torrent di transmission
+# akan menumpuk banyak.
+# tambahan note untuk folder series sudah ada seri dari download manual, pastikan nama folder
+# sesuai dengan nama di thetvdb list, untuk mempermudah pencarian.
+
+  download-series-jadul:
+    priority: 4
+    template: [transmission-global, reject]
+    configure_series:
+      from:
+        filesystem: 
+          path: '{{ secrets.folder.series }}'
+      settings:
+        identified_by: ep
+    thetvdb_lookup: yes
+    torrent_alive: 1
+    disable:
+      - seen
+      - seen_info_hash
+    discover:
+      release_estimations: ignore
+      interval: 15 minutes
+      what:
+        - next_series_episodes:
+            from_start: yes
+      from:
+        - piratebay:
+            category: highres tv
+        - extratorrent:
+            category: tv
+        - limetorrents:
+            category: tv
+# set semua torrent dari list ini ada diposisi bawah jadi tidak mendahului
+# series terbaru, sesuaikan juga dengan 'download-queue-size' di settings.json
+# transmission-daemon
+    transmission:
+      queue_position: 10
+      path: '/home/{{ secrets.user }}/torrent/Series/{{tvdb_series_name}}'
+    set:
+      label: tv
+    content_size:
+      max: 500
+      min: 20
+    pushbullet:
+      apikey: "{{ secrets.pushbullet.apikey }}"
+      title: "{{ series_name }} {{ series_id }}"
+      body: "{{ title }}\n\nSize: {{ content_size }}MB"
+
+  download-anime-jadul:
+    priority: 4
+    template: [transmission-global]
+    configure_series:
+      from:
+        filesystem: 
+          path: '{{ secrets.folder.anime }}'
+      settings:
+        identified_by: sequence
+    thetvdb_lookup: yes
+    torrent_alive: 1
+    disable:
+      - seen
+      - seen_info_hash
+    discover:
+      release_estimations: ignore
+      interval: 15 minutes
+      what:
+        - next_series_episodes:
+            from_start: yes
+      from:
+        - extratorrent:
+            category: anime
+        - limetorrents:
+            category: anime
+    transmission:
+      queue_position: 10
+      path: '/home/{{ secrets.user }}/torrent/anime/{{series_name}}'
+    set:
+      label: anime
+    content_size:
+      max: 500
+      min: 20
+    pushbullet:
+      apikey: "{{ secrets.pushbullet.apikey }}"
+      title: "{{ series_name }} {{ series_id }}"
+      body: "{{ title }}\n\nSize: {{ content_size }}MB"
 
 # task ini berguna untuk memasukkan daftar film dari list watchlist di
 # trakt.tv kedalam list flexget (mymovies), yang akan dijadikan acuan 
@@ -207,18 +302,24 @@ tasks:
 # piratebay
   movies-search:
     trakt_lookup: yes
-    priority: 10 # jika kurang dari 10 seeder tidak akan dipakai
+    priority: 5
     discover:
       what:
         - movie_list: mymovies
       from:
-        - piratebay: yes
+        - piratebay:
+            category: movies
+        - limetorrents:
+            category: movies
+        - extratorrent:
+            category: movies
       interval: 6 hours # bisa menggunakan minutes, hours, atau days
     torrent_alive: 10
     quality: dvdrip+
-    template: [transmission-global, rssout]
+    template: [transmission-global, reject]
     transmission:
       path: '{{ secrets.folder.movies }}'
+      queue_position: 20
     set:
       label: movies
     pushbullet:
@@ -226,32 +327,9 @@ tasks:
       title: "{{ imdb_name }}"
       body: "{{ title }}\n \nSize: {{ content_size }}MB"
 
-# kirim email yang berisi download.rss ke email yang ditentukan
-# dengan interval 1 hari
-  emailfeed:
-    rss:
-      url: '/home/{{ secrets.user }}/downloads.rss'
-    disable: [ seen ]
-    metainfo_series: yes
-    thetvdb_lookup: yes
-    imdb_lookup: yes
-    tmdb_lookup: yes
-    accept_all: yes
-    email:
-      from: '\{{ secrets.email.from }}'
-      to: '\{{ secrets.email.to }}'
-      subject: 'Flexget'
-      template: html
-      smtp_host: smtp.gmail.com
-      smtp_port: 587
-      smtp_username: '\{{ secrets.email.smtp-user }}'
-      smtp_password: '\{{ secrets.email.smtp-pass }}'
-      smtp_tls: yes
-    interval: 1 days
-
 # pindahkan file dari folder download ke exists
   move-series:
-    priority: 31
+    priority: 7
     disable:
       - seen
       - seen_info_hash
@@ -278,20 +356,21 @@ tasks:
 
 # pindahkan file dari folder download ke exists
   move-movies:
-    priority: 32
+    priority: 8
     disable:
       - seen
       - seen_info_hash
       - retry_failed
     metainfo_series: yes
-    thetvdb_lookup: yes
+    imdb_lookup: yes
     filesystem:
       path: '/home/{{ secrets.user }}/torrent/Movies/'
       recursive: yes
       retrieve: files
       regexp: '.*\.(avi|mkv|mp4)$'
+    accept_all: yes
     move:
-      to: "/{{ secrets.folder.movies}}/"
+      to: "/{{ secrets.folder.movies}}/{{ imdb_name }}"
       along:
         extensions:
           - srt
@@ -304,7 +383,7 @@ tasks:
 
 # pindahkan file dari folder download ke exists
   move-anime:
-    priority: 33
+    priority: 9
     disable:
       - seen
       - seen_info_hash
@@ -316,6 +395,7 @@ tasks:
       recursive: yes
       retrieve: files
       regexp: '.*\.(avi|mkv|mp4)$'
+    accept_all: yes
     metainfo_series: yes
     move:
       to: "/{{ secrets.folder.anime }}/{{series_name}}/"
@@ -335,17 +415,38 @@ tasks:
       finished_for: 1 hours
     disable: details
 
+##### isi database dengan file yang sudah ada di library
+
+  populate-series-db:
+    priority: 1
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    seen: local
+    filesystem:
+      path: '/{{ secrets.folder.series }}'
+      recursive: yes
+      retrieve: files
+      regexp: '.*\.(avi|mkv|mp4)$'
+    accept_all: yes
+    configure_series:
+      from:
+        filesystem:
+          path: '/{{secrets.folder.series}}'
+          retrieve: dirs
+      settings:
+        tracking: no
+
 # bisa juga dicantumkan dalam task, seperti di task movies-search
 schedules:
 
-  - tasks: [move-series, move-movies, move-anime, clean-up]
+  - tasks: [move-series, move-movies, move-anime, populate-series-db, clean-up]
     interval:
       hours: 1
 
-  - tasks: [tv-download, anime-download]
+  - tasks: [reject, tv-download, anime-download]
     interval:
       hours: 2
 
-  - tasks: [import-movie-list, movies-download]
+  - tasks: [import-movie-list, reject, movies-download]
     interval:
-      hours: 4
+      hours: 3
