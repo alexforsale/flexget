@@ -2,7 +2,7 @@ Flexget Configuration File
 ========
 
 Konfigurasi flexget dengan support file secrets. Jelas bukan penggunaan yang sangat "menyeluruh",
-tapi cukup sesuai untuk penggunaan pribadi. Cukup menambahkan folder series, Movies, dan anime kedalam library [kodi](https://kodi.tv/)
+tapi cukup sesuai untuk penggunaan pribadi. Cukup menambahkan folder series dan movies kedalam library [kodi](https://kodi.tv/)
 dan semuanya berjalan dengan (hampir) otomatis.
 
 Note: ini masih work in progress
@@ -10,9 +10,8 @@ Note: ini masih work in progress
 Saat ini fitur yang berjalan:
 * mengimpor list database tv series dari thetvdb.com
 * mengimpor list database movies dari trakt.tv
-* mengimpor list database anime berdasarkan nama folder (cukup membuat folder baru dengan nama anime yang akan didownload)
 * mencari torrent dari rss secara berkala
-* support download manual, cukup taruh file .torrent di /home/{{ user }}/(Series, Movies atau anime) akan otomatis diproses oleh flexget
+* support download manual, cukup taruh file .torrent di /home/{{ user }}/(Series atau Movies) akan otomatis diproses oleh flexget
 * memindahkan torrent yang selesai didownload ke folder target
 * menghapus list torrent yang selesai didownload dari transmission
 * notifikasi melalui pushbullet
@@ -26,7 +25,7 @@ Dependencies:
 * Linux (jelas)
 * lupa, sepertinya ada lagi
 
-Note untuk folder /home/{{ user }}/Series, /home/{{ user }}/Movies dan /home/{{ user }}/anime perlu diubah permissionnya.
+Note untuk folder /home/{{ user }}/Series dan /home/{{ user }}/Movies perlu diubah permissionnya.
 
 
 	sudo usermod -a -G debian-transmission {{ user }}
@@ -35,13 +34,11 @@ Note untuk folder /home/{{ user }}/Series, /home/{{ user }}/Movies dan /home/{{ 
 
 	sudo chgrp debian-transmission /home/torrent/{{ user }}/Movies
 
-	sudo chgrp debian-transmission /home/torrent/{{ user }}/anime
 
 	sudo chmod 770 /home/{{ user }}/torrent/Series
 
 	sudo chmod 770 /home/{{ user }}/torrent/Movies
 
-	sudo chmod 770 /home/{{ user }}/torrent/anime
 
 stop service daemonnya
 
