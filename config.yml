@@ -25,11 +25,10 @@ templates:
         - '*.rar'
         - '*.zip'
 
-
 # setting global untuk transmission-daemon
 # perlu disesuaikan dengan konfigurasi transmission di /etc/transmission-daemon/settings.json
   transmission-global:
-    transmission:
+    _transmission-settings: &transmission-settings
       enabled: yes
       host: localhost
       port: 9091
@@ -41,6 +40,40 @@ templates:
       retry_time: 10 seconds
       retry_time_multiplier: 1
       max_retries: 4
+
+# ambil settings dari transmission-settings juga
+  transmission-series:
+    transmission:
+      <<: *transmission-settings
+      path: '/home/{{ secrets.user }}/torrent/Series/{{tvdb_series_name}}'
+
+  transmission-movies:
+    transmission:
+      <<: *transmission-settings
+      path: '/home/{{ secrets.user }}/torrent/Movies'
+
+  transmission-anime:
+    transmission:
+      <<: *transmission-settings
+      path: '/home/{{ secrets.user }}/torrent/anime/{{series_name}}'
+
+# settings untuk pushbullet yang akan mengirim notifikasi
+
+  pushbullet-global:
+    _pushbullet-settings: &pushbullet-settings
+      apikey: "{{ secrets.pushbullet.apikey }}"
+
+  pushbullet-series:
+    pushbullet:
+      <<: *pushbullet-settings
+      title: "{{ series_name }} {{ series_id }}"
+      body: "{{ title }}\n\nSize: {{ content_size }}MB"
+
+  pushbullet-movies:
+    pushbullet:
+      <<: *pushbullet-settings
+      title: "{{ imdb_name }}"
+      body: "{{ title }}\n \nSize: {{ content_size }}MB"
 
 # list rss
   rss-tv:
@@ -69,51 +102,23 @@ templates:
       - rss: { url: 'https://www.limetorrents.cc/rss/16/' }
 
 # template untuk TV series
-  tv:
+  series:
+    thetvdb_lookup: yes
     set:
       label: tv
-    transmission:
-      path: '/home/{{ secrets.user }}/torrent/Series/{{tvdb_series_name}}'
-# scrape folder tujuan agar tidak terjadi download double
-    exists_series: 
-      path: '{{ secrets.folder.series }}'
-# penambahan tv series baru bisa dari banyak sumber
     configure_series:
-# untuk thetvdb.com perlu registrasi dan mengisi list tv series disana
       from:
-        thetvdb_list:
-          username: '{{ secrets.thetvdb.user }}'
-          account_id: '{{ secrets.thetvdb.id }}'
-
-# namun bisa juga dengan membaca folder tujuan, cukup membuat folder baru
-# di exists_series dengan catatan nama folder harus sesuai dengan yang 
-# tercantum di database thetvdb, karena lookupnya disite tersebut.
-# disini sengaja dicomment
-#    configure_series:
-#      from:
-#        filesystem:
-#          - /mnt/TOSHIBA/Movies/Series
-    thetvdb_lookup: yes
-    series:
+        entry_list: thetvdb-series
       settings:
-        tv:
 # untuk list quality bisa dilihat di http://flexget.com/Plugins/quality
-          quality: "!720p+"
-          identified_by: ep
-# pushbullet yang nantinya akan mengirim notifikasi jika ada file yang didownload
-# bisa ditentukan jika ingin hanya kirim ke device tertentu dengan tambahan 'device:'
-# berguna untuk mengirim notifikasi ke android, atau ke chrome/chromium
-    pushbullet:
-      apikey: "{{ secrets.pushbullet.apikey }}"
-      title: "{{ series_name }} {{ series_id }}"
-      body: "{{ title }}\n\nSize: {{ content_size }}MB"
+        quality: "!720p+"
+        identified_by: ep
 
 # template untuk movies
   movies:
     set:
       label: movies
-    transmission:
-      path: '/home/{{ secrets.user }}/torrent/Movies'
+    movie_list: mymovies
     exists_movie:
       path: '{{ secrets.folder.movies }}'
       lookup: imdb
@@ -122,9 +127,6 @@ templates:
     imdb_lookup: yes
     quality: webrip+
     torrent_alive: 10
-    list_match:
-      from:
-        - movie_list: mymovies
 # filter berdasarkan filename
     regexp:
       from: title
@@ -134,36 +136,95 @@ templates:
         - line
         - hc
         - korsub
-    pushbullet:
-      apikey: "{{ secrets.pushbullet.apikey }}"
-      title: "{{ imdb_name }}"
-      body: "{{ title }}\n \nSize: {{ content_size }}MB"
 
-# template untuk movies
+# template untuk anime
   anime:
     set:
       label: anime
-    transmission:
-      path: '/home/{{ secrets.user }}/torrent/anime/{{series_name}}'
     exists_series: '{{ secrets.folder.anime }}'
-# sama dengan tv series, penambahan anime baru cukup dengan membuat
+# penambahan anime baru cukup dengan membuat
 # folder baru sesuai dengan nama anime yang akan didownload.
     configure_series:
       from:
         filesystem:
           - '{{ secrets.folder.anime }}'
+      settings:
+        identified_by: sequence
+        special_ids:
+          - OVA
     thetvdb_lookup: yes
-    pushbullet:
-      apikey: "{{ secrets.pushbullet.apikey }}"
-      title: "{{ series_name }} {{ series_id }}"
-      body: "{{ title }}\n\nSize: {{ content_size }}MB"
 
 # disini semua template diatas digunakan
 tasks:
 
-  tv-download:
+##### isi database dengan file yang sudah ada di library
+
+  populate-series-db:
     priority: 1
-    template: [transmission-global, reject, tv, rss-tv]
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    seen: local
+    filesystem:
+      path: '/{{ secrets.folder.series }}'
+      recursive: yes
+      retrieve: files
+      regexp: '.*\.(avi|mkv|mp4)$'
+    accept_all: yes
+    configure_series:
+      from:
+        filesystem:
+          path: '/{{secrets.folder.series}}'
+          retrieve: dirs
+      settings:
+        tracking: no
+
+
+# task ini berguna untuk memasukkan daftar film dari list watchlist di
+# trakt.tv kedalam list flexget (mymovies), yang akan dijadikan acuan 
+# untuk download dari rss
+  populate-movies-db:
+    priority: 2
+    trakt_list:
+      username: '{{ secrets.trakt.user }}'
+      account: '{{ secrets.trakt.account }}'
+      list: watchlist
+      type: movies
+    accept_all: yes
+    seen: local
+    list_add:
+      - movie_list: mymovies
+
+#
+  purge-series-list:
+    priority: 3
+    disable:
+      - seen
+      - seen_info_hash
+      - retry_failed
+    entry_list: thetvdb-series
+    accept_all: yes
+    list_remove:
+      - entry_list: thetvdb-series
+
+# import list series dari thetvdb
+  fill-series-list:
+    priority: 4
+    disable:
+      - seen
+      - seen_info_hash
+      - retry_failed
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    thetvdb_list:
+      username: '{{ secrets.thetvdb.user }}'
+      account_id: '{{ secrets.thetvdb.id }}'
+    accept_all: yes
+    list_add:
+      - entry_list: thetvdb-series
+
+  download-series-rss:
+    priority: 5
+    template: [transmission-series, reject, series, rss-tv, pushbullet-series]
     torrent_alive: 10
 # filter pertama untuk file yang akan didownload berdasarkan dari size
 # pastikan juga filter ini masuk range dari quality yang dicantumkan
@@ -171,14 +232,13 @@ tasks:
     content_size:
       max: 900
       min: 20
-
 # prioritas download pertama
     transmission:
       queue_position: 0
 
-  movies-download:
-    priority: 2
-    template: [transmission-global, reject, movies, rss-movies]
+  download-movies-rss:
+    priority: 6
+    template: [transmission-movies, reject, movies, rss-movies, pushbullet-movies]
     torrent_alive: 10
 # prioritas download pertama
     transmission:
@@ -187,9 +247,9 @@ tasks:
       max: 4000
       min: 20    
 
-  anime-download:
-    priority: 3
-    template: [transmission-global, anime, rss-anime]
+  download-anime-rss:
+    priority: 7
+    template: [transmission-anime, anime, rss-anime, pushbullet-series]
     torrent_alive: 10
 # untuk anime 300mb+ sudah keterlaluan
     content_size:
@@ -204,9 +264,9 @@ tasks:
 # tambahan note untuk folder series sudah ada seri dari download manual, pastikan nama folder
 # sesuai dengan nama di thetvdb list, untuk mempermudah pencarian.
 
-  download-series-jadul:
-    priority: 4
-    template: [transmission-global, reject]
+  download-series-discover:
+    priority: 8
+    template: [transmission-series, reject, pushbullet-series]
     configure_series:
       from:
         filesystem: 
@@ -220,7 +280,6 @@ tasks:
       - seen_info_hash
     discover:
       release_estimations: ignore
-      interval: 15 minutes
       what:
         - next_series_episodes:
             from_start: yes
@@ -236,20 +295,15 @@ tasks:
 # transmission-daemon
     transmission:
       queue_position: 10
-      path: '/home/{{ secrets.user }}/torrent/Series/{{tvdb_series_name}}'
     set:
       label: tv
     content_size:
       max: 500
       min: 20
-    pushbullet:
-      apikey: "{{ secrets.pushbullet.apikey }}"
-      title: "{{ series_name }} {{ series_id }}"
-      body: "{{ title }}\n\nSize: {{ content_size }}MB"
 
-  download-anime-jadul:
-    priority: 4
-    template: [transmission-global]
+  download-anime-discover:
+    priority: 9
+    template: [transmission-anime, pushbullet-series]
     configure_series:
       from:
         filesystem: 
@@ -257,6 +311,8 @@ tasks:
       settings:
         identified_by: sequence
     thetvdb_lookup: yes
+    parsing:
+      series: guessit
     torrent_alive: 1
     disable:
       - seen
@@ -274,35 +330,16 @@ tasks:
             category: anime
     transmission:
       queue_position: 10
-      path: '/home/{{ secrets.user }}/torrent/anime/{{series_name}}'
     set:
       label: anime
     content_size:
       max: 500
       min: 20
-    pushbullet:
-      apikey: "{{ secrets.pushbullet.apikey }}"
-      title: "{{ series_name }} {{ series_id }}"
-      body: "{{ title }}\n\nSize: {{ content_size }}MB"
 
-# task ini berguna untuk memasukkan daftar film dari list watchlist di
-# trakt.tv kedalam list flexget (mymovies), yang akan dijadikan acuan 
-# untuk download dari rss
-  import-movie-list:
-    trakt_list:
-      username: '{{ secrets.trakt.user }}'
-      account: '{{ secrets.trakt.account }}'
-      list: watchlist
-      type: movies
-    accept_all: yes
-    seen: local
-    list_add:
-      - movie_list: mymovies
-
-# piratebay
-  movies-search:
+# cari file movies dari piratebay, limetorrent dan extratorrent
+  download-movies-discover:
+    priority: 10
     trakt_lookup: yes
-    priority: 5
     discover:
       what:
         - movie_list: mymovies
@@ -313,23 +350,21 @@ tasks:
             category: movies
         - extratorrent:
             category: movies
-      interval: 6 hours # bisa menggunakan minutes, hours, atau days
-    torrent_alive: 10
-    quality: dvdrip+
-    template: [transmission-global, reject]
+    torrent_alive: 1
+    quality: dvdscr+
+    template: [transmission-movies, reject, pushbullet-movies]
     transmission:
       path: '{{ secrets.folder.movies }}'
       queue_position: 20
     set:
       label: movies
-    pushbullet:
-      apikey: "{{ secrets.pushbullet.apikey }}"
-      title: "{{ imdb_name }}"
-      body: "{{ title }}\n \nSize: {{ content_size }}MB"
+    content_size:
+      max: 4000
+      min: 20    
 
 # pindahkan file dari folder download ke exists
   move-series:
-    priority: 7
+    priority: 11
     disable:
       - seen
       - seen_info_hash
@@ -356,7 +391,7 @@ tasks:
 
 # pindahkan file dari folder download ke exists
   move-movies:
-    priority: 8
+    priority: 12
     disable:
       - seen
       - seen_info_hash
@@ -383,7 +418,7 @@ tasks:
 
 # pindahkan file dari folder download ke exists
   move-anime:
-    priority: 9
+    priority: 13
     disable:
       - seen
       - seen_info_hash
@@ -406,7 +441,8 @@ tasks:
 
 
 # hapus list transmission yang sudah selesai didownload lebih dari 1 jam
-  clean-up:
+  clean-up-transmission:
+    priority: 14
     clean_transmission:
       host: localhost
       port: 9091
@@ -415,39 +451,171 @@ tasks:
       finished_for: 1 hours
     disable: details
 
-##### isi database dengan file yang sudah ada di library
-
-  populate-series-db:
-    priority: 1
+##### Update list series thetvdb dari folder series , kecuali yang sudah selesai
+#
+  update-series-list:
+    priority: 15
+    disable:
+      - seen
+      - seen_info_hash
+      - retry_failed
     metainfo_series: yes
     thetvdb_lookup: yes
-    seen: local
     filesystem:
-      path: '/{{ secrets.folder.series }}'
-      recursive: yes
-      retrieve: files
-      regexp: '.*\.(avi|mkv|mp4)$'
+      path: '/{{secrets.folder.series}}'
+      retrieve: dirs
+    manipulate:
+      - title:
+          replace:
+            regexp: '$'
+            format: ' S01E01'
     accept_all: yes
-    configure_series:
-      from:
-        filesystem:
-          path: '/{{secrets.folder.series}}'
-          retrieve: dirs
-      settings:
-        tracking: no
-    manual: yes
+    if:
+      - tvdb_status == 'Ended': reject
+    list_add:
+      - thetvdb_list:
+          username: '{{ secrets.thetvdb.user }}'
+          account_id: '{{ secrets.thetvdb.id }}'
+
+# Hapus series yang sudah selesai dari list thetvdbClean the series that already ended from trakt series list
+#
+  clean-series-list:
+    priority: 16
+    disable:
+      - seen
+      - seen_info_hash
+      - retry_failed
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    thetvdb_list:
+      username: '{{ secrets.thetvdb.user }}'
+      account_id: '{{ secrets.thetvdb.id }}'
+    if:
+      - tvdb_status == 'Ended': accept
+    list_remove:
+      - thetvdb_list:
+          username: '{{ secrets.thetvdb.user }}'
+          account_id: '{{ secrets.thetvdb.id }}'
+
+
+# task untuk torrent yang didownload secara manual, cukup menaruh file .torrent di
+# masing - masing path untuk series. movie atau anime, dan akan diproses oleh flexget
+# masuk kedalam database.
+
+# series
+  download-series-manual:
+    priority: 17
+    disable:
+      - seen
+      - seen_info_hash
+      - retry_failed
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    parsing:
+      series: guessit
+    template:
+      - transmission-series
+      - pushbullet-series
+    filesystem:
+      path: '/home/{{ secrets.user }}/torrent/Series/'
+      mask: '*.torrent'
+    accept_all: yes
+    exec:
+      on_output:
+        for_accepted: rm -f "{{location}}"
+
+# anime
+  download-anime-manual:
+    priority: 18
+    disable:
+      - seen
+      - seen_info_hash
+      - retry_failed
+    parsing:
+      series: guessit
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    template:
+      - transmission-anime
+      - pushbullet-series
+    filesystem:
+      path: '/home/{{ secrets.user }}/torrent/anime/'
+      mask: '*.torrent'
+    accept_all: yes
+    exec:
+      on_output:
+        for_accepted: rm -f "{{location}}"
+
+# movies
+  download-movies-manual:
+    priority: 19
+    disable:
+      - seen
+      - seen_info_hash
+      - retry_failed
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    imdb_lookup: yes
+    template:
+      - transmission-movies
+      - pushbullet-movies
+    filesystem:
+      path: '/home/{{ secrets.user }}/torrent/Movies/'
+      mask: '*.torrent'
+    accept_all: yes
+    exec:
+      on_output:
+        for_accepted: rm -f "{{location}}"
 
 # bisa juga dicantumkan dalam task, seperti di task movies-search
+
 schedules:
-
-  - tasks: [move-series, move-movies, move-anime, populate-series-db, clean-up]
-    interval:
-      hours: 1
-
-  - tasks: [reject, tv-download, anime-download]
-    interval:
-      hours: 2
-
-  - tasks: [import-movie-list, reject, movies-download]
+  - tasks: 
+    - populate-movies-db
+    - populate-series-db
+    - purge-series-list
+    - fill-series-list
+    - update-series-list
     interval:
       hours: 3
+
+  - tasks: 
+    - move-series
+    - move-movies
+    - move-anime
+    interval: 
+      hours: 2
+
+  - tasks: 
+    - clean-up-transmission
+    interval: 
+      days: 1
+
+
+  - tasks: 
+    - download-series-manual
+    - download-movies-manual
+    - download-anime-manual
+    interval:
+      minutes: 30
+
+  - tasks: 
+    - download-series-discover
+    - download-movies-discover
+    - download-anime-discover
+    interval:
+      minutes: 15
+
+  - tasks: 
+    - download-series-rss
+    - download-movies-rss
+    - download-anime-rss
+    interval:
+      minutes: 10
+
+  - tasks: 
+    - update-series-list
+    - clean-series-list
+    interval:
+      hours: 3
+

@@ -12,6 +12,7 @@ Saat ini fitur yang berjalan:
 * mengimpor list database movies dari trakt.tv
 * mengimpor list database anime berdasarkan nama folder (cukup membuat folder baru dengan nama anime yang akan didownload)
 * mencari torrent dari rss secara berkala
+* support download manual, cukup taruh file .torrent di /home/{{ user }}/(Series, Movies atau anime) akan otomatis diproses oleh flexget
 * memindahkan torrent yang selesai didownload ke folder target
 * menghapus list torrent yang selesai didownload dari transmission
 * notifikasi melalui pushbullet
@@ -21,6 +22,7 @@ Dependencies:
 
 * flexget
 * transmission-daemon
+* transmissionrpc
 * Linux (jelas)
 * lupa, sepertinya ada lagi
 
