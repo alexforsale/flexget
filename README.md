@@ -12,6 +12,7 @@ Saat ini fitur yang berjalan:
 * mengimpor list database movies dari trakt.tv
 * mencari torrent dari rss secara berkala
 * support download manual, cukup taruh file .torrent di /home/{{ user }}/(Series atau Movies) akan otomatis diproses oleh flexget
+* download 2 film per hari dengan rule: imdb rating >7, vote > 800, rilis >2005
 * memindahkan torrent yang selesai didownload ke folder target
 * menghapus list torrent yang selesai didownload dari transmission
 * notifikasi melalui pushbullet
