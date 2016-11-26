@@ -344,6 +344,8 @@ tasks:
           - sub
         subdirs:
           - subs
+    content_size:
+      min: 50
     template: pushbullet-series-moved
     exec:
       on_exit:
@@ -373,6 +375,8 @@ tasks:
           - sub
         subdirs:
           - subs
+    content_size:
+      min: 50
     template: pushbullet-movies-moved
     exec:
       on_exit:
