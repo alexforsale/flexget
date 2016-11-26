@@ -76,11 +76,23 @@ templates:
       title: "{{ series_name }} {{ series_id }}"
       body: "{{ title }}\n\nSize: {{ content_size }}MB"
 
+  pushbullet-series-moved:
+    pushbullet:
+      <<: *pushbullet-settings
+      title: "{{ series_name }} {{ series_id }}"
+      body: "{{ title }}\n\nSize: {{ content_size }}MB moved to {{ location }}"
+
   pushbullet-movies:
     pushbullet:
       <<: *pushbullet-settings
       title: "{{ imdb_name }}"
       body: "{{ title }}\n \nSize: {{ content_size }}MB"
+
+  pushbullet-movies-moved:
+    pushbullet:
+      <<: *pushbullet-settings
+      title: "{{ imdb_name }}"
+      body: "{{ title }}\n \nSize: {{ content_size }}MB moved to {{ location }}"
 
 # list rss
   rss-tv:
@@ -174,6 +186,9 @@ tasks:
       type: movies
     accept_all: yes
     seen: local
+    disable:
+      - seen
+      - seen_info_hash
     list_add:
       - movie_list: mymovies
 
@@ -291,6 +306,9 @@ tasks:
     list_match:
       from:
         - movie_list: mymovies
+    disable:
+      - seen
+      - seen_info_hash
     template: 
       - torrents
       - movies
@@ -326,6 +344,7 @@ tasks:
           - sub
         subdirs:
           - subs
+    template: pushbullet-series-moved
     exec:
       on_exit:
         phase: find /home/{{ secrets.user }}/torrent/Series/* -type d -empty -delete
@@ -354,6 +373,7 @@ tasks:
           - sub
         subdirs:
           - subs
+    template: pushbullet-movies-moved
     exec:
       on_exit:
         phase: find /home/{{ secrets.user }}/torrent/Movies/* -type d -empty -delete
@@ -552,7 +572,7 @@ schedules:
     - move-series
     - move-movies
     interval: 
-      minutes: 20
+      minutes: 15
 
   - tasks: 
     - random-movies-download
@@ -562,25 +582,25 @@ schedules:
   - tasks: 
     - clean-up-transmission
     interval: 
-      days: 1
+      hours: 3
 
   - tasks: 
     - download-series-manual
     - download-movies-manual
     interval:
-      minutes: 30
+      minutes: 15
 
   - tasks: 
     - download-series-discover
     - download-movies-discover
     interval:
-      minutes: 15
+      minutes: 30
 
   - tasks: 
     - download-series-rss
     - download-movies-rss
     interval:
-      minutes: 10
+      minutes: 60
 
   - tasks: 
     - clean-series-list
