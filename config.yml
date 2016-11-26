@@ -90,6 +90,7 @@ templates:
       - rss: { url: 'https://rarbg.to/rssdd.php?category=tv' }
       - rss: { url: 'http://extratorrent.cc/rss.xml?cid=8&type=last' }
       - rss: { url: 'https://www.limetorrents.cc/rss/20/' }
+      - rss: { url: 'http://www.dnoid.me/rss/3.xml' }
 
   rss-movies:
     inputs:
@@ -98,6 +99,7 @@ templates:
       - rss: { url: 'https://rarbg.to/rssdd.php?category=movies' }
       - rss: { url: 'http://extratorrent.cc/rss.xml?cid=4&type=last' }
       - rss: { url: 'https://www.limetorrents.cc/rss/16/' }
+      - rss: { url: 'http://www.dnoid.me/rss/1.xml' }
 
 # template untuk TV series
   series:
@@ -286,6 +288,9 @@ tasks:
             category: movies
         - extratorrent:
             category: movies
+    list_match:
+      from:
+        - movie_list: mymovies
     template: 
       - torrents
       - movies
@@ -451,6 +456,7 @@ tasks:
       - movies
       - transmission-movies
       - pushbullet-movies
+      - reject
     filesystem:
       path: '/home/{{ secrets.user }}/torrent/Movies/'
       mask: '*.torrent'
@@ -465,6 +471,7 @@ tasks:
       - rss-movies
       - torrents
       - movies
+      - reject
     priority: 20
     disable:
       - seen
@@ -494,9 +501,6 @@ tasks:
         - s\d+e\d+: {from: title}
         - '\d{4}.\d{2}.\d{2}': {from: title}
         - \d+x\d+: {from: title}
-    content_size:
-      max: 4000
-      min: 20
     require_field: imdb_url
     imdb_lookup: yes
     seen_movies: strict
@@ -511,6 +515,7 @@ tasks:
       - movies
       - transmission-movies
       - pushbullet-movies
+      - reject
     disable:
       - seen
       - seen_info_hash
@@ -528,6 +533,12 @@ tasks:
             category: movies
         - extratorrent:
             category: movies
+    list_match:
+      from:
+        - movie_list: random-movies
+    content_size:
+      max: 4000
+      min: 20
 
 # bisa juga dicantumkan dalam task, seperti di task movies-search
 schedules:
@@ -562,7 +573,6 @@ schedules:
   - tasks: 
     - download-series-discover
     - download-movies-discover
-    - download-anime-discover
     interval:
       minutes: 15
 
