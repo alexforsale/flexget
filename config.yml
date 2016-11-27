@@ -6,6 +6,19 @@ secrets: secrets.yml
 
 templates:
 
+  global:
+# semua task akan berhenti jika sisa space untuk path - path dibawah ini kurang
+# dari 5000mb
+    free_space:
+      path: /home/{{ secrets.user }}/torrent/
+      space: 5000
+    free_space:
+      path: '{{ secrets.folder.movies }}'
+      space: 5000
+    free_space:
+      path: '{{ secrets.folder.series }}'
+      space: 5000
+
 # reject secara global
   reject:
     regexp:
