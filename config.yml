@@ -148,8 +148,6 @@ templates:
     exists_movie:
       path: '{{ secrets.folder.movies }}'
       lookup: imdb
-# boleh double asal quality better
-      allow_different_qualities: better
     imdb_lookup: yes
     quality: dvdscr+
 # filter berdasarkan filename
