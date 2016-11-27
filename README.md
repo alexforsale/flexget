@@ -20,16 +20,38 @@ Saat ini fitur yang berjalan:
 Dependencies:
 --------
 
-* flexget
+* [flexget](http://flexget.com/)
 * transmission-daemon
 * transmissionrpc
 * Linux (jelas)
 * lupa, sepertinya ada lagi
+* [kodi](http://flexget.com/Install)
+
+Cara penggunaan
+-----
+
+install semua yang dibutuhkan seperti kodi, flexget, transmissionrpc dan lainnya, informasi instalasi di [flexget.com](http://flexget.com/Install) sepertinya sudah mengcover semuanya. clone git ini kedalam folder ~/.flexget ubah semua informasi yang di secrets.yml.contoh sesuai kebutuhan, lalu ubah nama filenya menjadi secrets.yml set folder library di kodi sesuai dengan yang dicantumkan di secrets.yml
+
+Ada dua jenis folder yang digunakan, yang pertama, folder download yang berada di /home/{{ user }}, pastikan nama user di secrets.yml sesuai.
+folder kedua, merupakan lokasi akhir yang menjadi library. Sengaja dipisah agar kodi tidak membaca file - file selain media yang diperlukan.
+
+Login di [thetvdb](http://thetvdb.com/) atau register jika belum, masuk ke [account info](http://thetvdb.com/?tab=userinfo) masukkan username dan Account Identifier kedalam secrets.yml di bagian thetvdb. Lalu masuk ke search di site tersebut, cari series yang akan didownload dan jadikan favorit.
+
+Login / daftar di [pushbullet](https://www.pushbullet.com/) create access token di account settings, masukkan api tersebut ke secrets.yml fungsinya untuk mengirim notifikasi, cukup install applikasi pushbullet dari google play store untuk android.
+
+Login / daftar di [trakt.tv](https://trakt.tv), authorize melalu commandline:
+
+	flexget trakt auth (username)
+
+ikuti instruksi yang diberikan. Masukan data yang diperlukan di secrets.yml
+Dan setelahnya, flexget akan berjalan dibackground secara otomatis, jika ingin menambah series baru cukup tambahkan di thetvdb.com, atau jika ingin secara manual cukup download file .torrent-nya dan simpan di folder /home/{{ user }}/Series nanti akan diproses oleh flexget. Jika ingin menambah movie baru cukup search di trakt.tv dan masukkan kedalam watchlist, atau jika ingin secara manual cukup download file .torrent-nya dan simpan di folder /home/torrent/{{ user }}/Movies.
+
+Tidak ada setting tambahan untuk kodi, cukup masukkan folder tujuan sebagai library didalam kodi, nantinya akan discrape secara otomatis oleh kodi. Add-on yang cukup berguna mungkin subtitle, sudah ada di repo kodi, cukup diinstall saja.
 
 Note untuk folder /home/{{ user }}/Series dan /home/{{ user }}/Movies perlu diubah permissionnya.
 
 
-	sudo usermod -a -G debian-transmission {{ user }}
+	sudo usermod -a -G debian-transmission (debian/ubuntu) {{ user }}
 
 	sudo chgrp debian-transmission /home/torrent/{{ user }}/Series
 
@@ -53,16 +75,4 @@ ubah "umask": 18 menjadi 2 dan start kembali
 
 	sudo service transmission-daemon start
 
-Jalankan task populate-series-db minimal sekali untuk membaca file yang sudah ada didalam library
 
-	flexget execute --tasks seed-series-db --disable-advancement --learn
-
-minimal sekali setelah set up flexget untuk pertama kalinya, atau jika menambah serie baru yang sudah ada beberapa
-didownload
-
-Instalasi
--------
-
-cukup clone ke ~/.flexget
-
-tentunya itu setelah sebelumnya install flexget, informasinya di[sini](http://flexget.com/Install)
