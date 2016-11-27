@@ -15,6 +15,7 @@ Saat ini fitur yang berjalan:
 * download 2 film random per hari dengan rule: imdb rating >7, vote > 800, rilis >2005
 * memindahkan torrent yang selesai didownload ke folder target
 * menghapus list torrent yang selesai didownload dari transmission
+* download subtitle secara otomatis untuk file yang belum memiliki subtitle di library
 * notifikasi melalui pushbullet
 
 Dependencies:
@@ -26,7 +27,7 @@ Dependencies:
 * Linux (jelas)
 * lupa, sepertinya ada lagi
 * [kodi](http://flexget.com/Install)
-
+* subliminal untuk download subtitle (pip install subliminal)
 Cara penggunaan
 -----
 
