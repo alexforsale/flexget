@@ -48,6 +48,8 @@ Dan setelahnya, flexget akan berjalan dibackground secara otomatis, jika ingin m
 
 Tidak ada setting tambahan untuk kodi, cukup masukkan folder tujuan sebagai library didalam kodi, nantinya akan discrape secara otomatis oleh kodi. Add-on yang cukup berguna mungkin subtitle, sudah ada di repo kodi, cukup diinstall saja.
 
+Untuk melihat isi dari transmission, cukup buka browser dan masuk ke http://localhost:9091/ dengan user:pass transmission:transmission
+
 Note untuk folder /home/{{ user }}/Series dan /home/{{ user }}/Movies perlu diubah permissionnya.
 
 
