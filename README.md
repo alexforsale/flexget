@@ -28,6 +28,7 @@ Dependencies:
 * lupa, sepertinya ada lagi
 * [kodi](http://flexget.com/Install)
 * subliminal untuk download subtitle (pip install subliminal)
+
 Cara penggunaan
 -----
 
