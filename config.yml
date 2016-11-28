@@ -33,6 +33,8 @@ templates:
         - \bcastellano\b
         - \brus(sian)?\b
         - \bportugese?\b
+        - \btruefrench?\b
+        - \blatin(o)?\b
     content_filter:
       reject:
         - '*.rar'
@@ -110,21 +112,43 @@ templates:
 # list rss
   rss-tv:
     inputs:
-      - rss: { url: 'https://eztv.ag/ezrss.xml' }
-      - rss: { url: 'http://www.torlock.com/television/rss.xml' }
-      - rss: { url: 'https://rarbg.to/rssdd.php?category=tv' }
-      - rss: { url: 'http://extratorrent.cc/rss.xml?cid=8&type=last' }
-      - rss: { url: 'https://www.limetorrents.cc/rss/20/' }
-      - rss: { url: 'http://www.dnoid.me/rss/3.xml' }
+      - rss: 
+          url: https://eztv.ag/ezrss.xml
+          all_entries: no
+      - rss:
+          url: http://www.torlock.com/television/rss.xml
+          all_entries: no
+      - rss: 
+          url: https://rarbg.to/rssdd.php?category=tv
+          all_entries: no
+      - rss:
+          url: http://extratorrent.cc/rss.xml?cid=8&type=last
+          all_entries: no
+      - rss:
+          url: https://www.limetorrents.cc/rss/20/
+          all_entries: no
+      - rss:
+          url: http://www.dnoid.me/rss/3.xml
+          all_entries: no
 
   rss-movies:
     inputs:
-      - rss: { url: 'https://kat.am/movies/?rss=1' }
-      - rss: { url: 'https://yts.ag/rss' }
-      - rss: { url: 'https://rarbg.to/rssdd.php?category=movies' }
-      - rss: { url: 'http://extratorrent.cc/rss.xml?cid=4&type=last' }
-      - rss: { url: 'https://www.limetorrents.cc/rss/16/' }
-      - rss: { url: 'http://www.dnoid.me/rss/1.xml' }
+      - rss: 
+          url: https://kat.am/movies/?rss=1
+          all_entries: no
+      - rss:
+          url: https://yts.ag/rss
+          all_entries: no
+      - rss:
+          url: https://rarbg.to/rssdd.php?category=movies
+          all_entries: no
+      - rss:
+          url: http://extratorrent.cc/rss.xml?cid=4&type=last
+          all_entries: no
+      - rss:
+          url: https://www.limetorrents.cc/rss/16/
+          all_entries: no
+
 
 # template untuk TV series
   series:
@@ -137,7 +161,9 @@ templates:
         entry_list: thetvdb-series
       settings:
 # untuk list quality bisa dilihat di http://flexget.com/Plugins/quality
-        quality: "!720p+"
+        qualities:
+          - "<720p"
+          - webdl|hdtv|webrip h264
         identified_by: ep
 
 # template untuk movies
@@ -146,7 +172,9 @@ templates:
       label: movies
     movie_list: mymovies
     exists_movie:
-      path: '{{ secrets.folder.movies }}'
+      path: 
+        - '{{ secrets.folder.movies }}'
+        - '/home/{{ secrets.user }}/torrent/Series/'
       lookup: imdb
     imdb_lookup: yes
     quality: dvdscr+
@@ -190,16 +218,15 @@ tasks:
 # untuk download dari rss
   populate-movies-db:
     priority: 2
+    disable:
+      - seen
+      - seen_info_hash
     trakt_list:
       username: '{{ secrets.trakt.user }}'
       account: '{{ secrets.trakt.account }}'
       list: watchlist
       type: movies
-    accept_all: yes
     seen: local
-    disable:
-      - seen
-      - seen_info_hash
     list_add:
       - movie_list: mymovies
 
@@ -233,6 +260,11 @@ tasks:
 
   download-series-rss:
     priority: 5
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    disable:
+      - seen
+      - seen_info_hash
     template: 
       - torrents
       - transmission-series
@@ -249,6 +281,9 @@ tasks:
 
   download-movies-rss:
     priority: 6
+    disable:
+      - seen
+      - seen_info_hash
     template: 
       - torrents
       - transmission-movies
@@ -269,6 +304,8 @@ tasks:
 
   download-series-discover:
     priority: 8
+    metainfo_series: yes
+    thetvdb_lookup: yes
     template: 
       - torrents
       - series
@@ -303,6 +340,15 @@ tasks:
 # cari file movies dari piratebay, limetorrent dan extratorrent
   download-movies-discover:
     priority: 10
+    template: 
+      - torrents
+      - movies
+      - transmission-movies
+      - reject
+      - pushbullet-movies
+    disable:
+      - seen
+      - seen_info_hash
     trakt_lookup: yes
     discover:
       what:
@@ -317,15 +363,6 @@ tasks:
     list_match:
       from:
         - movie_list: mymovies
-    disable:
-      - seen
-      - seen_info_hash
-    template: 
-      - torrents
-      - movies
-      - transmission-movies
-      - reject
-      - pushbullet-movies
     content_size:
       max: 4000
       min: 20
@@ -401,7 +438,7 @@ tasks:
       port: 9091
       username: transmission
       password: transmission
-      finished_for: 1 days
+      finished_for: 1 hours
     disable: details
 
 
@@ -464,6 +501,8 @@ tasks:
       - retry_failed
     parsing:
       series: guessit
+    metainfo_series: yes
+    thetvdb_lookup: yes
     template:
       - torrents
       - series
@@ -472,7 +511,7 @@ tasks:
     filesystem:
       path: '/home/{{ secrets.user }}/torrent/Series/'
       mask: '*.torrent'
-    accept_all: yes
+#    accept_all: yes
     exec:
       on_output:
         for_accepted: rm -f "{{location}}"
@@ -495,7 +534,7 @@ tasks:
     filesystem:
       path: '/home/{{ secrets.user }}/torrent/Movies/'
       mask: '*.torrent'
-    accept_all: yes
+#    accept_all: yes
     exec:
       on_output:
         for_accepted: rm -f "{{location}}"
@@ -533,6 +572,7 @@ tasks:
         - ts
         - hindi
         - german
+        - french
         - s\d+e\d+: {from: title}
         - '\d{4}.\d{2}.\d{2}': {from: title}
         - \d+x\d+: {from: title}
@@ -557,7 +597,6 @@ tasks:
       - retry_failed
     limit_new: 2
     proper_movies: yes
-    accept_all: yes
     discover:
       what:
         - movie_list: random-movies
@@ -568,6 +607,9 @@ tasks:
             category: movies
         - extratorrent:
             category: movies
+    require_field: imdb_url
+    imdb_lookup: yes
+    seen_movies: strict
     list_match:
       from:
         - movie_list: random-movies
@@ -647,7 +689,7 @@ schedules:
   - tasks: 
     - clean-up-transmission
     interval: 
-      hours: 3
+      hours: 1
 
   - tasks: 
     - download-series-manual
@@ -665,7 +707,7 @@ schedules:
     - download-series-rss
     - download-movies-rss
     interval:
-      minutes: 60
+      minutes: 10
 
   - tasks: 
     - clean-series-list
