@@ -127,9 +127,6 @@ templates:
       - rss:
           url: https://www.limetorrents.cc/rss/20/
           all_entries: no
-      - rss:
-          url: http://www.dnoid.me/rss/3.xml
-          all_entries: no
 
   rss-movies:
     inputs:
@@ -177,7 +174,7 @@ templates:
         - '/home/{{ secrets.user }}/torrent/Series/'
       lookup: imdb
     imdb_lookup: yes
-    quality: dvdscr+
+    quality: dvdscr-dvdrip
 # filter berdasarkan filename
     regexp:
       from: title
@@ -274,7 +271,7 @@ tasks:
       - pushbullet-series
 # filter pertama untuk file yang akan didownload berdasarkan dari size
 # pastikan juga filter ini masuk range dari quality yang dicantumkan
-# untuk tv show dengan filter quality "!720p+"
+# untuk tv show dengan filter quality "<720p"
     content_size:
       max: 900
       min: 20
@@ -312,15 +309,17 @@ tasks:
       - transmission-series
       - reject
       - pushbullet-series
-    configure_series:
-      from:
-        filesystem: 
-          path: '{{ secrets.folder.series }}'
-      settings:
-        identified_by: ep
     disable:
       - seen
       - seen_info_hash
+    configure_series:
+      from:
+        filesystem: 
+          path: 
+            - '{{ secrets.folder.series }}'
+            - '/home/{{ secrets.user }}/torrent/Series/'
+      settings:
+        identified_by: ep
     discover:
       release_estimations: ignore
       what:
@@ -511,7 +510,7 @@ tasks:
     filesystem:
       path: '/home/{{ secrets.user }}/torrent/Series/'
       mask: '*.torrent'
-#    accept_all: yes
+    accept_all: yes
     exec:
       on_output:
         for_accepted: rm -f "{{location}}"
@@ -683,6 +682,7 @@ schedules:
 
   - tasks: 
     - random-movies-download
+    - download-movies-discover
     interval: 
       days: 1
 
@@ -699,7 +699,6 @@ schedules:
 
   - tasks: 
     - download-series-discover
-    - download-movies-discover
     interval:
       minutes: 30
 
