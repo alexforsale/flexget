@@ -114,38 +114,27 @@ templates:
     inputs:
       - rss: 
           url: https://eztv.ag/ezrss.xml
-          all_entries: no
-      - rss:
-          url: http://www.torlock.com/television/rss.xml
-          all_entries: no
+#      - rss:
+#          url: http://www.torlock.com/television/rss.xml
       - rss: 
           url: https://rarbg.to/rssdd.php?category=tv
-          all_entries: no
-      - rss:
-          url: http://extratorrent.cc/rss.xml?cid=8&type=last
-          all_entries: no
-      - rss:
-          url: https://www.limetorrents.cc/rss/20/
-          all_entries: no
+#      - rss:
+#          url: http://extratorrent.cc/rss.xml?cid=8&type=last
+#      - rss:
+#          url: https://www.limetorrents.cc/rss/20/
 
   rss-movies:
     inputs:
       - rss: 
           url: https://kat.am/movies/?rss=1
-          all_entries: no
       - rss:
           url: https://yts.ag/rss
-          all_entries: no
       - rss:
           url: https://rarbg.to/rssdd.php?category=movies
-          all_entries: no
       - rss:
           url: http://extratorrent.cc/rss.xml?cid=4&type=last
-          all_entries: no
       - rss:
           url: https://www.limetorrents.cc/rss/16/
-          all_entries: no
-
 
 # template untuk TV series
   series:
