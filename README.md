@@ -16,7 +16,7 @@ Saat ini fitur yang berjalan:
 * memindahkan torrent yang selesai didownload ke folder target
 * menghapus list torrent yang selesai didownload dari transmission
 * download subtitle secara otomatis untuk file yang belum memiliki subtitle di library
-* notifikasi melalui pushbullet
+* notifikasi melalui pushbullet dan telegram
 
 Dependencies:
 --------
@@ -28,6 +28,7 @@ Dependencies:
 * lupa, sepertinya ada lagi
 * [kodi](http://flexget.com/Install)
 * subliminal untuk download subtitle (pip install subliminal)
+* telegram bot (pip install python-telegram-bot)
 
 Cara penggunaan
 -----

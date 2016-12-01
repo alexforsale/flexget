@@ -109,6 +109,45 @@ templates:
       title: "{{ imdb_name }}"
       body: "{{ title }}\n \nSize: {{ content_size }}MB moved to {{ location }}"
 
+# Template untuk bot telegram, karena path versi free sepertinya dibatasi untuk jumlah message perhari
+
+  telegram-series:
+    telegram:
+      bot_token: '{{secrets.telegram.bot_token}}'
+      parse_mode: markdown
+      template: |+
+        "{%if task in ["move-series"]%}*series moved to {{ location }}*"
+        "{%else%}*Download Started from task:"
+        "*{{task|replace("_", "-")}}"
+        "{%endif%}"
+        "*{{tvdb_series_name|d(series_name)}}* - {{quality|d('')}}"
+        "*{{title}}*"
+        "*Size:* {{ content_size }} MB"
+        "*{{tvdb_ep_name|d('')}}*"
+        "[{{imdb_url}}]"
+      recipients:
+        - username: '{{secrets.telegram.username}}'
+
+  telegram-movies:
+    telegram:
+      bot_token: '{{secrets.telegram.bot_token}}'
+      parse_mode: markdown
+      template: |+
+        "{%if task in ["move-movies"]%}*series moved to {{ location }}*"
+        "{%else%}*Download Started from task:"
+        "*{{task|replace("_", "-")}}"
+        "{%endif%}"
+        "--*{{imdb_name}}* - ({{imdb_year}})--"
+        "*{{title}}*"
+        "*Quality:*{{quality|d('')}}"
+        "*Size:* {{ content_size }} MB"
+        "*Rating:* {{imdb_score}}/10 with {{imdb_votes}} Votes"
+        "*Actors:* {% for key, value in imdb_actors.iteritems() %} {{ value|e }},{% endfor %}"
+        "*Plot:* {{imdb_plot_outline}}"
+        "[{{imdb_url}}]"
+      recipients:
+        - username: '{{secrets.telegram.username}}'
+
 # list rss
   rss-tv:
     inputs:
@@ -258,6 +297,7 @@ tasks:
       - series
       - rss-tv
       - pushbullet-series
+      - telegram-series
 # filter pertama untuk file yang akan didownload berdasarkan dari size
 # pastikan juga filter ini masuk range dari quality yang dicantumkan
 # untuk tv show dengan filter quality "<720p"
@@ -277,6 +317,7 @@ tasks:
       - movies
       - rss-movies
       - pushbullet-movies
+      - telegram-movies
     content_size:
       max: 4000
       min: 20    
@@ -298,6 +339,7 @@ tasks:
       - transmission-series
       - reject
       - pushbullet-series
+      - telegram-series
     disable:
       - seen
       - seen_info_hash
@@ -334,6 +376,7 @@ tasks:
       - transmission-movies
       - reject
       - pushbullet-movies
+      - telegram-movies
     disable:
       - seen
       - seen_info_hash
@@ -382,7 +425,9 @@ tasks:
           - subs
     content_size:
       min: 50
-    template: pushbullet-series-moved
+    template:
+      - pushbullet-series-moved
+      - telegram-series
     exec:
       on_exit:
         phase: find /home/{{ secrets.user }}/torrent/Series/* -type d -empty -delete
@@ -413,7 +458,9 @@ tasks:
           - subs
     content_size:
       min: 50
-    template: pushbullet-movies-moved
+    template:
+      - pushbullet-movies-moved
+      - telegram-movies
     exec:
       on_exit:
         phase: find /home/{{ secrets.user }}/torrent/Movies/* -type d -empty -delete
@@ -496,6 +543,7 @@ tasks:
       - series
       - transmission-series
       - pushbullet-series
+      - telegram-series
     filesystem:
       path: '/home/{{ secrets.user }}/torrent/Series/'
       mask: '*.torrent'
@@ -519,6 +567,7 @@ tasks:
       - transmission-movies
       - pushbullet-movies
       - reject
+      - telegram-movies
     filesystem:
       path: '/home/{{ secrets.user }}/torrent/Movies/'
       mask: '*.torrent'
@@ -579,6 +628,7 @@ tasks:
       - transmission-movies
       - pushbullet-movies
       - reject
+      - telegram-movies
     disable:
       - seen
       - seen_info_hash
