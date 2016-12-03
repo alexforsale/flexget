@@ -116,37 +116,39 @@ templates:
       bot_token: '{{secrets.telegram.bot_token}}'
       parse_mode: markdown
       template: |+
-        "{%if task in ["move-series"]%}*series moved to {{ location }}*"
-        "{%else%}*Download Started from task:"
-        "*{{task|replace("_", "-")}}"
-        "{%endif%}"
-        "*{{tvdb_series_name|d(series_name)}}* - {{quality|d('')}}"
-        "*{{title}}*"
-        "*Size:* {{ content_size }} MB"
-        "*{{tvdb_ep_name|d('')}}*"
-        "[{{imdb_url}}]"
+        {%if task in ["move-series"]%}*series moved to {{ location }}*
+        {%else%}*Download Started from task:
+        *{{task|replace("_", "-")}}
+        {%endif%}
+        *{{tvdb_series_name|d(series_name)}}* - {{quality|d('')}}
+        *{{title}}*
+        *Size:* {{ content_size }} MB
+        *{{tvdb_ep_name|d('')}}*
+        [{{imdb_url}}]
       recipients:
         - username: '{{secrets.telegram.username}}'
+        - group: '{{secrets.telegram.group}}'
 
   telegram-movies:
     telegram:
       bot_token: '{{secrets.telegram.bot_token}}'
       parse_mode: markdown
       template: |+
-        "{%if task in ["move-movies"]%}*series moved to {{ location }}*"
-        "{%else%}*Download Started from task:"
-        "*{{task|replace("_", "-")}}"
-        "{%endif%}"
-        "--*{{imdb_name}}* - ({{imdb_year}})--"
-        "*{{title}}*"
-        "*Quality:*{{quality|d('')}}"
-        "*Size:* {{ content_size }} MB"
-        "*Rating:* {{imdb_score}}/10 with {{imdb_votes}} Votes"
-        "*Actors:* {% for key, value in imdb_actors.iteritems() %} {{ value|e }},{% endfor %}"
-        "*Plot:* {{imdb_plot_outline}}"
-        "[{{imdb_url}}]"
+        {%if task in ["move-movies"]%}*movie moved to {{ location }}*
+        {%else%}*Download Started from task:
+        *{{task|replace("_", "-")}}
+        {%endif%}
+        --*{{imdb_name}}* - ({{imdb_year}})--
+        *{{title}}*
+        *Quality:*{{quality|d('')}}
+        *Size:* {{ content_size }} MB
+        *Rating:* {{imdb_score}}/10 with {{imdb_votes}} Votes
+        *Actors:* {% for key, value in imdb_actors.iteritems() %} {{ value|e }},{% endfor %}
+        *Plot:* {{imdb_plot_outline}}
+        [{{imdb_url}}]
       recipients:
         - username: '{{secrets.telegram.username}}'
+        - group: '{{secrets.telegram.group}}'
 
 # list rss
   rss-tv:
@@ -256,8 +258,31 @@ tasks:
       - movie_list: mymovies
 
 #
-  purge-series-list:
+
+  purge-movies-list:
     priority: 3
+    disable:
+      - seen
+      - seen_info_hash
+      - retry_failed
+    entry_list: mymovies
+    accept_all: yes
+    list_remove:
+      - entry_list: mymovies
+
+  purge-random-list:
+    priority: 4
+    disable:
+      - seen
+      - seen_info_hash
+      - retry_failed
+    entry_list: random-movies
+    accept_all: yes
+    list_remove:
+      - entry_list: random-movies
+
+  purge-series-list:
+    priority: 5
     disable:
       - seen
       - seen_info_hash
@@ -269,7 +294,7 @@ tasks:
 
 # import list series dari thetvdb
   fill-series-list:
-    priority: 4
+    priority: 6
     disable:
       - seen
       - seen_info_hash
@@ -284,7 +309,7 @@ tasks:
       - entry_list: thetvdb-series
 
   download-series-rss:
-    priority: 5
+    priority: 7
     metainfo_series: yes
     thetvdb_lookup: yes
     disable:
@@ -306,7 +331,7 @@ tasks:
       min: 20
 
   download-movies-rss:
-    priority: 6
+    priority: 8
     disable:
       - seen
       - seen_info_hash
@@ -330,7 +355,7 @@ tasks:
 # sesuai dengan nama di thetvdb list, untuk mempermudah pencarian.
 
   download-series-discover:
-    priority: 8
+    priority: 9
     metainfo_series: yes
     thetvdb_lookup: yes
     template: 
@@ -709,9 +734,11 @@ tasks:
 schedules:
   - tasks: 
     - purge-series-list
+    - purge-movies-list
+    - purge-random-list
     - fill-series-list
     interval:
-      hours: 12
+      hours: 4
 
   - tasks: 
     - move-series
