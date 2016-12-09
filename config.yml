@@ -375,6 +375,9 @@ tasks:
             - '{{ secrets.folder.series }}'
             - '/home/{{ secrets.user }}/torrent/Series/'
       settings:
+        qualities:
+          - "<720p"
+          - webdl|hdtv|webrip h264
         identified_by: ep
         upgrade: no
     discover:
