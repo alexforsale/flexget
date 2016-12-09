@@ -23,7 +23,7 @@ Dependencies:
 
 * [flexget](http://flexget.com/)
 * transmission-daemon
-* transmissionrpc
+* transmissionrpc (pip install Transmissionrpc)
 * Linux (jelas)
 * lupa, sepertinya ada lagi
 * [kodi](https://kodi.tv/)
