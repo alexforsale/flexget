@@ -18,6 +18,8 @@ templates:
     free_space:
       path: '{{ secrets.folder.series }}'
       space: 5000
+    pathscrub: windows
+    no_entries_ok: yes
 
 # reject secara global
   reject:
