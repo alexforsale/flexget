@@ -93,31 +93,31 @@ templates:
 
   pushbullet-global:
     _pushbullet-settings: &pushbullet-settings
-      apikey: "{{ secrets.pushbullet.apikey }}"
+      api_key: "{{ secrets.pushbullet.apikey }}"
 
   pushbullet-series:
     pushbullet:
       <<: *pushbullet-settings
       title: "{{ series_name }} {{ series_id }}"
-      body: "{{ title }}\n\nSize: {{ content_size }}MB"
+      message: "{{ title }}\n\nSize: {{ content_size }}MB"
 
   pushbullet-series-moved:
     pushbullet:
       <<: *pushbullet-settings
       title: "{{ series_name }} {{ series_id }}"
-      body: "{{ title }}\n\nSize: {{ content_size }}MB moved to {{ location }}"
+      message: "{{ title }}\n\nSize: {{ content_size }}MB moved to {{ location }}"
 
   pushbullet-movies:
     pushbullet:
       <<: *pushbullet-settings
       title: "{{ imdb_name }}"
-      body: "{{ title }}\n \nSize: {{ content_size }}MB"
+      message: "{{ title }}\n \nSize: {{ content_size }}MB"
 
   pushbullet-movies-moved:
     pushbullet:
       <<: *pushbullet-settings
       title: "{{ imdb_name }}"
-      body: "{{ title }}\n \nSize: {{ content_size }}MB moved to {{ location }}"
+      message: "{{ title }}\n \nSize: {{ content_size }}MB moved to {{ location }}"
 
 # Template untuk bot telegram, karena path versi free sepertinya dibatasi untuk jumlah message perhari
 
@@ -125,7 +125,7 @@ templates:
     telegram:
       bot_token: '{{secrets.telegram.bot_token}}'
       parse_mode: markdown
-      template: |+
+      message: |+
         {%if task in ["move-series"]%}*series moved to {{ location }}*
         {%else%}*Download Started from task:
         *{{task|replace("_", "-")}}
@@ -143,7 +143,7 @@ templates:
     telegram:
       bot_token: '{{secrets.telegram.bot_token}}'
       parse_mode: markdown
-      template: |+
+      message: |+
         {%if task in ["move-movies"]%}*movie moved to {{ location }}*
         {%else%}*Download Started from task:
         *{{task|replace("_", "-")}}

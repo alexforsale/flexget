@@ -26,7 +26,7 @@ Dependencies:
 * transmissionrpc
 * Linux (jelas)
 * lupa, sepertinya ada lagi
-* [kodi](http://flexget.com/Install)
+* [kodi](https://kodi.tv/)
 * subliminal untuk download subtitle (pip install subliminal)
 * telegram bot (pip install python-telegram-bot)
 
@@ -76,7 +76,7 @@ dan edit settings.json
 
 	sudo nano /etc/transmission-daemon/settings.json
 
-ubah "umask": 18 menjadi 2 dan start kembali
+ubah "umask": 18 menjadi 2 dan rpc-whitelist-enabled menjadi false, lalu start kembali servicenya
 
 	sudo service transmission-daemon start
 
