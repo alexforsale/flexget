@@ -53,14 +53,14 @@ Tidak ada setting tambahan untuk kodi, cukup masukkan folder tujuan sebagai libr
 
 Untuk melihat isi dari transmission, cukup buka browser dan masuk ke http://localhost:9091/ dengan user:pass transmission:transmission
 
-Note untuk folder /home/{{ user }}/Series dan /home/{{ user }}/Movies perlu diubah permissionnya.
+Note untuk folder /home/{{ user }}/torrent/Series dan /home/{{ user }}/torrent/Movies perlu diubah permissionnya.
 
 
 	sudo usermod -a -G debian-transmission (debian/ubuntu) {{ user }}
 
-	sudo chgrp debian-transmission /home/torrent/{{ user }}/Series
+	sudo chgrp debian-transmission /home/{{ user }}/torrent/Series
 
-	sudo chgrp debian-transmission /home/torrent/{{ user }}/Movies
+	sudo chgrp debian-transmission /home/{{ user }}/torrent/Movies
 
 
 	sudo chmod 770 /home/{{ user }}/torrent/Series
