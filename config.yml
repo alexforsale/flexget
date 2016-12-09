@@ -74,12 +74,20 @@ templates:
   transmission-series:
     transmission:
       <<: *transmission-settings
-      path: '/home/{{ secrets.user }}/torrent/Series/{{tvdb_series_name}}'
+      main_file_only: yes
+      include_subs: yes
+      rename_like_files: yes
+      path: '/home/{{ secrets.user }}/torrent/Series/{{tvdb_series_name|default(series_name)|pathscrub}}/'
+      content_filename: "{{tvdb_series_name|default(series_name)|pathscrub}} - {{tvdb_ep_id|default(series_id)}}{% if tvdb_ep_name|default(False) %} - {{tvdb_ep_name|pathscrub}}{% endif %}{% if quality|default(False) %} - [{{quality}}]{% endif %}"
 
   transmission-movies:
     transmission:
       <<: *transmission-settings
-      path: '/home/{{ secrets.user }}/torrent/Movies'
+      main_file_only: yes
+      include_subs: yes
+      rename_like_files: yes
+      content_filename: "{{tmdb_name|pathscrub}} ({{tmdb_year}}){% if quality|default(False) %} - [{{quality}}]{% endif %}"
+      path: '/home/{{ secrets.user }}/torrent/Movies/{{movie_name|pathscrub}}'
 
 # settings untuk pushbullet yang akan mengirim notifikasi
 
