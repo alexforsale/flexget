@@ -136,7 +136,6 @@ templates:
         [{{imdb_url}}]
       recipients:
         - username: '{{secrets.telegram.username}}'
-        - group: '{{secrets.telegram.group}}'
 
   telegram-movies:
     telegram:
@@ -157,7 +156,6 @@ templates:
         [{{imdb_url}}]
       recipients:
         - username: '{{secrets.telegram.username}}'
-        - group: '{{secrets.telegram.group}}'
 
 # list rss
   rss-tv:
