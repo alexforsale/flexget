@@ -1,7 +1,7 @@
 #
 # Author: Christian Alexander <alexforsale@yahoo.com>
 #
-secrets: secrets.yml
+variables: secrets.yml
 
 templates:
 
@@ -9,13 +9,13 @@ templates:
 # semua task akan berhenti jika sisa space untuk path - path dibawah ini kurang
 # dari 5000mb
     free_space:
-      path: /home/{{ secrets.user }}/torrent/
+      path: /home/'{? user ?}'/torrent/
       space: 5000
     free_space:
-      path: '{{ secrets.folder.movies }}'
+      path: '{? folder.movies ?}'
       space: 5000
     free_space:
-      path: '{{ secrets.folder.series }}'
+      path: '{? folder.series ?}'
       space: 5000
     pathscrub: windows
     no_entries_ok: yes
@@ -88,75 +88,6 @@ templates:
       content_filename: "{{tmdb_name|pathscrub}} ({{tmdb_year}}){% if quality|default(False) %} - [{{quality}}]{% endif %}"
       path: '/home/{{ secrets.user }}/torrent/Movies/{{movie_name|pathscrub}}'
 
-# settings untuk pushbullet yang akan mengirim notifikasi
-
-  pushbullet-global:
-    _pushbullet-settings: &pushbullet-settings
-      api_key: "{{ secrets.pushbullet.apikey }}"
-
-  pushbullet-series:
-    pushbullet:
-      <<: *pushbullet-settings
-      title: "{{ series_name }} {{ series_id }}"
-      message: "{{ title }}\n\nSize: {{ content_size }}MB"
-
-  pushbullet-series-moved:
-    pushbullet:
-      <<: *pushbullet-settings
-      title: "{{ series_name }} {{ series_id }}"
-      message: "{{ title }}\n\nSize: {{ content_size }}MB moved to {{ location }}"
-
-  pushbullet-movies:
-    pushbullet:
-      <<: *pushbullet-settings
-      title: "{{ imdb_name }}"
-      message: "{{ title }}\n \nSize: {{ content_size }}MB"
-
-  pushbullet-movies-moved:
-    pushbullet:
-      <<: *pushbullet-settings
-      title: "{{ imdb_name }}"
-      message: "{{ title }}\n \nSize: {{ content_size }}MB moved to {{ location }}"
-
-# Template untuk bot telegram, karena path versi free sepertinya dibatasi untuk jumlah message perhari
-
-  telegram-series:
-    telegram:
-      bot_token: '{{secrets.telegram.bot_token}}'
-      parse_mode: markdown
-      message: |+
-        {%if task in ["move-series"]%}*series moved to {{ location }}*
-        {%else%}*Download Started from task:
-        *{{task|replace("_", "-")}}
-        {%endif%}
-        *{{tvdb_series_name|d(series_name)}}* - {{quality|d('')}}
-        *{{title}}*
-        *Size:* {{ content_size }} MB
-        *{{tvdb_ep_name|d('')}}*
-        [{{imdb_url}}]
-      recipients:
-        - username: '{{secrets.telegram.username}}'
-
-  telegram-movies:
-    telegram:
-      bot_token: '{{secrets.telegram.bot_token}}'
-      parse_mode: markdown
-      message: |+
-        {%if task in ["move-movies"]%}*movie moved to {{ location }}*
-        {%else%}*Download Started from task:
-        *{{task|replace("_", "-")}}
-        {%endif%}
-        --*{{imdb_name}}* - ({{imdb_year}})--
-        *{{title}}*
-        *Quality:*{{quality|d('')}}
-        *Size:* {{ content_size }} MB
-        *Rating:* {{imdb_score}}/10 with {{imdb_votes}} Votes
-        *Actors:* {% for key, value in imdb_actors.iteritems() %} {{ value|e }},{% endfor %}
-        *Plot:* {{imdb_plot_outline}}
-        [{{imdb_url}}]
-      recipients:
-        - username: '{{secrets.telegram.username}}'
-
 # list rss
   rss-tv:
     inputs:
@@ -207,8 +138,8 @@ templates:
     movie_list: mymovies
     exists_movie:
       path: 
-        - '{{ secrets.folder.movies }}'
-        - '/home/{{ secrets.user }}/torrent/Series/'
+        - '{? folder.movies ?}'
+        - '/home/{? user ?}/torrent/Series/'
       lookup: imdb
     imdb_lookup: yes
     quality: dvdscr-dvdrip
@@ -233,7 +164,7 @@ tasks:
     thetvdb_lookup: yes
     seen: local
     filesystem:
-      path: '/{{ secrets.folder.series }}'
+      path: '/{? folder.series ?}'
       recursive: yes
       retrieve: files
       regexp: '.*\.(avi|mkv|mp4)$'
@@ -241,7 +172,7 @@ tasks:
     configure_series:
       from:
         filesystem:
-          path: '/{{secrets.folder.series}}'
+          path: '/{? folder.series ?}'
           retrieve: dirs
       settings:
         tracking: no
@@ -256,8 +187,8 @@ tasks:
       - seen
       - seen_info_hash
     trakt_list:
-      username: '{{ secrets.trakt.user }}'
-      account: '{{ secrets.trakt.account }}'
+      username: '{? trakt.user ?}'
+      account: '{? secrets.trakt.account ?}'
       list: watchlist
       type: movies
     seen: local
@@ -309,8 +240,8 @@ tasks:
     metainfo_series: yes
     thetvdb_lookup: yes
     thetvdb_list:
-      username: '{{ secrets.thetvdb.user }}'
-      account_id: '{{ secrets.thetvdb.id }}'
+      username: '{? thetvdb.user ?}'
+      account_id: '{? thetvdb.id ?}'
     accept_all: yes
     list_add:
       - entry_list: thetvdb-series
@@ -328,8 +259,6 @@ tasks:
       - reject
       - series
       - rss-tv
-      - pushbullet-series
-      - telegram-series
 # filter pertama untuk file yang akan didownload berdasarkan dari size
 # pastikan juga filter ini masuk range dari quality yang dicantumkan
 # untuk tv show dengan filter quality "<720p"
@@ -348,8 +277,6 @@ tasks:
       - reject
       - movies
       - rss-movies
-      - pushbullet-movies
-      - telegram-movies
     content_size:
       max: 4000
       min: 20    
@@ -370,8 +297,6 @@ tasks:
       - series
       - transmission-series
       - reject
-      - pushbullet-series
-      - telegram-series
     disable:
       - seen
       - seen_info_hash
@@ -379,8 +304,8 @@ tasks:
       from:
         filesystem: 
           path: 
-            - '{{ secrets.folder.series }}'
-            - '/home/{{ secrets.user }}/torrent/Series/'
+            - '{? folder.series ?}'
+            - /home/{? user ?}/torrent/Series/
       settings:
         qualities:
           - "<720p"
@@ -411,8 +336,6 @@ tasks:
       - movies
       - transmission-movies
       - reject
-      - pushbullet-movies
-      - telegram-movies
     disable:
       - seen
       - seen_info_hash
@@ -444,7 +367,7 @@ tasks:
     metainfo_series: yes
     thetvdb_lookup: yes
     filesystem:
-      path: '/home/{{ secrets.user }}/torrent/Series/'
+      path: '/home/{? user ?}/torrent/Series/'
       recursive: yes
       retrieve: files
       regexp: '.*\.(avi|mkv|mp4)$'
@@ -452,7 +375,7 @@ tasks:
     seen: local
     require_field: series_name
     move:
-      to: "/{{ secrets.folder.series }}/{{tvdb_series_name}}/Season {{tvdb_season}}"
+      to: "{? folder.series ?}/{{tvdb_series_name}}/Season {{tvdb_season}}"
       along:
         extensions:
           - srt
@@ -461,12 +384,9 @@ tasks:
           - subs
     content_size:
       min: 50
-    template:
-      - pushbullet-series-moved
-      - telegram-series
     exec:
       on_exit:
-        phase: find /home/{{ secrets.user }}/torrent/Series/* -type d -empty -delete
+        phase: find /home/'{? user ?}'/torrent/Series/* -type d -empty -delete
 
 # pindahkan file dari folder download ke exists
   move-movies:
@@ -477,7 +397,7 @@ tasks:
       - retry_failed
     imdb_lookup: yes
     filesystem:
-      path: '/home/{{ secrets.user }}/torrent/Movies/'
+      path: /home/{{? .user ?}}/torrent/Movies/
       recursive: yes
       retrieve: files
       regexp: '.*\.(avi|mkv|mp4)$'
@@ -485,7 +405,7 @@ tasks:
     seen: local
     require_field: imdb_name
     move:
-      to: "/{{ secrets.folder.movies}}/{{ imdb_name }}"
+      to: "{? folder.movies ?}/{{ imdb_name }}"
       along:
         extensions:
           - srt
@@ -494,12 +414,9 @@ tasks:
           - subs
     content_size:
       min: 50
-    template:
-      - pushbullet-movies-moved
-      - telegram-movies
     exec:
       on_exit:
-        phase: find /home/{{ secrets.user }}/torrent/Movies/* -type d -empty -delete
+        phase: find /home/'{? user ?}'/torrent/Movies/* -type d -empty -delete
 
 # hapus list transmission yang sudah selesai didownload lebih dari 1 jam
   clean-up-transmission:
@@ -524,14 +441,14 @@ tasks:
     metainfo_series: yes
     thetvdb_lookup: yes
     thetvdb_list:
-      username: '{{ secrets.thetvdb.user }}'
-      account_id: '{{ secrets.thetvdb.id }}'
+      username: '{? thetvdb.user ?}'
+      account_id: '{? thetvdb.id ?}'
     if:
       - tvdb_status == 'Ended': accept
     list_remove:
       - thetvdb_list:
-          username: '{{ secrets.thetvdb.user }}'
-          account_id: '{{ secrets.thetvdb.id }}'
+          username: '{? thetvdb.user ?}'
+          account_id: '{? thetvdb.id ?}'
 
 # Update list series thetvdb dari folder series , kecuali yang sudah selesai
 
@@ -544,7 +461,7 @@ tasks:
     metainfo_series: yes
     thetvdb_lookup: yes
     filesystem:
-      path: '/{{secrets.folder.series}}'
+      path: '/{? folder.series ?}'
       retrieve: dirs
     manipulate:
       - title:
@@ -556,8 +473,8 @@ tasks:
       - tvdb_status == 'Ended': reject
     list_add:
       - thetvdb_list:
-          username: '{{ secrets.thetvdb.user }}'
-          account_id: '{{ secrets.thetvdb.id }}'
+          username: '{? thetvdb.user ?}'
+          account_id: '{? thetvdb.id ?}'
 
 # task untuk torrent yang didownload secara manual, cukup menaruh file .torrent di
 # masing - masing path untuk series. movie atau anime, dan akan diproses oleh flexget
@@ -578,10 +495,8 @@ tasks:
       - torrents
       - series
       - transmission-series
-      - pushbullet-series
-      - telegram-series
     filesystem:
-      path: '/home/{{ secrets.user }}/torrent/Series/'
+      path: '/home/{? user ?}/torrent/Series/'
       mask: '*.torrent'
     accept_all: yes
     exec:
@@ -601,11 +516,9 @@ tasks:
       - torrents
       - movies
       - transmission-movies
-      - pushbullet-movies
       - reject
-      - telegram-movies
     filesystem:
-      path: '/home/{{ secrets.user }}/torrent/Movies/'
+      path: '/home/{? user ?}/torrent/Movies/'
       mask: '*.torrent'
 #    accept_all: yes
     exec:
@@ -662,9 +575,7 @@ tasks:
       - torrents
       - movies
       - transmission-movies
-      - pushbullet-movies
       - reject
-      - telegram-movies
     disable:
       - seen
       - seen_info_hash
@@ -701,8 +612,8 @@ tasks:
     imdb_lookup: yes
     filesystem:
       path:
-        - "/{{ secrets.folder.movies}}"
-        - "/{{ secrets.folder.series }}"
+        - "/{? folder.movies ?}"
+        - "/{? folder.series ?}"
       regexp: '.*\.(avi|mkv|mp4)$'
       recursive: yes
     content_size:
