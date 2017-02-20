@@ -83,3 +83,36 @@ ubah "umask": 18 menjadi 2 dan rpc-whitelist-enabled menjadi false, lalu start k
 
 	sudo service transmission-daemon start
 
+
+#### Pushbullet API
+
+Daftar / login ke [Pushbullet](https://www.pushbullet.com) dan create access
+token di [settings](https://www.pushbullet.com/#settings/account), masukkan
+kedalam secrets.yml
+
+#### Thetvdb
+
+Daftar / login ke web [Thetvdb.com](thetvdb.com), masuk ke account info,
+masukkan user dan account id ke secret.yml
+
+### Scheduling flexget
+
+Konfigurasi ini saya buat dengan menggunakan scheduling daemon mode, jika
+ingin menggunakan metode lain bisa mengacu ke dokumentasi
+[flexget](https://flexget.com/InstallWizard/Linux/Scheduling). Konfigurasi
+daemon mode ini menggunakan cron, yang dipanggil dengan perintah `crontab
+-e`. Biasanya default editor yang digunakan adalah vi, bisa diubah dengan
+menambahkan `EDITOR=nano crontab -e`.
+
+Tambahkan baris ini didalam cron:
+
+```
+@reboot /usr/local/bin/flexget daemon start -d
+```
+
+Pastikan sebelumnya lokasi dari flexget (dengan perintah `which
+flexget`). Jika ingin menggunakan file konfigurasi yang berbeda, tambahkan
+dengan `-c [path]`
+
+Tapi sebaiknya sebelum memasukkan task cron ini, pastikan juga konfigurasinya
+berjalan dengan lancar, bisa di test dengan perintah `flexget --test`
