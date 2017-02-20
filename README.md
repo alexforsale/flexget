@@ -76,8 +76,10 @@ dan edit settings.json
 
 	sudo nano /etc/transmission-daemon/settings.json
 
+*Note:* jika tidak ada file `/etc/transmission-daemon/settings.json` bisa coba
+cek konfigurasi per-user-nya, biasanya di `~/.config/transmission-daemon/settings.json`.
+
 ubah "umask": 18 menjadi 2 dan rpc-whitelist-enabled menjadi false, lalu start kembali servicenya
 
 	sudo service transmission-daemon start
-
 
