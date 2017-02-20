@@ -608,54 +608,57 @@ tasks:
       min: 20
 
 # check library untuk subtitle
-  check_subs:
-    disable:
-      - seen
-      - seen_info_hash
-    metainfo_series: yes
-    thetvdb_lookup: yes
-    imdb_lookup: yes
-    filesystem:
-      path:
-        - "/{? folder.movies ?}"
-        - "/{? folder.series ?}"
-      regexp: '.*\.(avi|mkv|mp4)$'
-      recursive: yes
-    content_size:
-      min: 50
-    check_subtitles: yes
-    if:
-      - subtitles is None: accept
-    list_add:
-      - subtitle_list:
-          list: subtitles
-          languages:
-            - en
-            - id
+#  check_subs:
+#     disable:
+#      - seen
+#      - seen_info_hash
+#    metainfo_series: yes
+#    thetvdb_lookup: yes
+#    imdb_lookup: yes
+#    filesystem:
+#      path:
+#        - "/{? folder.movies ?}"
+#        - "/{? folder.series ?}"
+#      regexp: '.*\.(avi|mkv|mp4)$'
+#      recursive: yes
+#    content_size:
+#      min: 50
+#    check_subtitles: yes
+#    if:
+#      - subtitles is None: accept
+#    list_add:
+#      - subtitle_list:
+#          list: subtitles
+#          languages:
+#            - en
+#            - id
 
 # download subtitles yang diperlukan
-  get_subs:
-    no_entries_ok: yes
-    disable:
-      - seen
-      - seen_info_hash
-    subtitle_list:
-      list: subtitles
-      recursion_depth: 3
-    list_match:
-      from:
-        - subtitle_list:
-            list: subtitles
-    subliminal:
-      languages:  # languages is required, but if a language is specified in subtitle_list, it takes priority
-        - en
-      providers: 
-        - addic7ed
-        - opensubtitles
-        - podnapisi
-        - tvsubtitles
-      single: no  # will append the language code to the subtitle file
-      exact_match: no
+#  get_subs:
+#    no_entries_ok: yes
+#    disable:
+#      - seen
+#      - seen_info_hash
+#    subtitle_list:
+#      list: subtitles
+#      recursion_depth: 3
+#    list_match:
+#      from:
+#        - subtitle_list:
+#            list: subtitles
+#    subliminal:
+#      languages:  # languages is required, but if a language is specified in subtitle_list, it takes priority
+#        - en
+#      providers: 
+#        - opensubtitles
+#        - podnapisi
+#      single: no  # will append the language code to the subtitle file
+#      hearing_impaired: yes
+#      exact_match: no
+#      authentication:
+#        opensubtitles:
+#          username: '{? opensubtitles.username ?}'
+#          password: '{? opensubtitles.password ?}'
 
 # bisa juga dicantumkan dalam task, seperti di task movies-search
 schedules:
