@@ -20,6 +20,10 @@ templates:
     pathscrub: windows
     no_entries_ok: yes
 
+# settings untuk proxy
+    proxy:
+      http: '{? proxy.http ?}'
+
 # reject secara global
   reject:
     regexp:
