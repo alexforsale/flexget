@@ -313,7 +313,8 @@ tasks:
         identified_by: ep
         upgrade: no
     discover:
-      release_estimations: ignore
+      release_estimations:
+        optimistic: 28 days
       what:
         - next_series_episodes:
             from_start: yes
