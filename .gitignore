@@ -17,3 +17,4 @@ received/
 *sqlite*
 *backup
 .config-lock 
+*~
