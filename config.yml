@@ -76,7 +76,7 @@ templates:
       main_file_only: yes
       include_subs: yes
       rename_like_files: yes
-      path: '/home/{{ secrets.user }}/torrent/Series/{{tvdb_series_name|default(series_name)|pathscrub}}/'
+      path: '/home/{{? user ?}}/torrent/Series/{{tvdb_series_name|default(series_name)|pathscrub}}/'
       content_filename: "{{tvdb_series_name|default(series_name)|pathscrub}} - {{tvdb_ep_id|default(series_id)}}{% if tvdb_ep_name|default(False) %} - {{tvdb_ep_name|pathscrub}}{% endif %}{% if quality|default(False) %} - [{{quality}}]{% endif %}"
 
   transmission-movies:
@@ -86,7 +86,7 @@ templates:
       include_subs: yes
       rename_like_files: yes
       content_filename: "{{tmdb_name|pathscrub}} ({{tmdb_year}}){% if quality|default(False) %} - [{{quality}}]{% endif %}"
-      path: '/home/{{ secrets.user }}/torrent/Movies/{{movie_name|pathscrub}}'
+      path: '/home/{{? user ?}}/torrent/Movies/{{movie_name|pathscrub}}'
 
 # list rss
   rss-tv:
@@ -188,7 +188,7 @@ tasks:
       - seen_info_hash
     trakt_list:
       username: '{? trakt.user ?}'
-      account: '{? secrets.trakt.account ?}'
+      account: '{? trakt.account ?}'
       list: watchlist
       type: movies
     seen: local
