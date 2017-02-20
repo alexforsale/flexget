@@ -96,11 +96,11 @@ templates:
   rss-tv:
     inputs:
       - rss: 
-          url: https://eztv.ag/ezrss.xml
+          url: https://eztv.yt/ezrss.xml
 #      - rss:
 #          url: http://www.torlock.com/television/rss.xml
-      - rss: 
-          url: https://rarbg.to/rssdd.php?category=tv
+#      - rss: 
+#          url: https://rarbg.to/rssdd.php?category=tv
 #      - rss:
 #          url: http://extratorrent.cc/rss.xml?cid=8&type=last
 #      - rss:
