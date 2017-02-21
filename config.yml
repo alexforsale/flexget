@@ -323,12 +323,11 @@ tasks:
         - next_series_episodes:
             from_start: yes
       from:
-        - piratebay:
-            category: highres tv
-        - extratorrent:
-            category: tv
-        - limetorrents:
-            category: tv
+        - publichd:
+	    category: HDTV
+	- rarbg:
+	    category: HDTV
+        - torrentz: verified
     content_size:
       max: 500
       min: 20
@@ -349,12 +348,9 @@ tasks:
       what:
         - movie_list: mymovies
       from:
-        - piratebay:
-            category: movies
-        - limetorrents:
-            category: movies
-        - extratorrent:
-            category: movies
+        - publichd
+	- rarbg
+        - torrentz: verified
     list_match:
       from:
         - movie_list: mymovies
@@ -591,12 +587,9 @@ tasks:
       what:
         - movie_list: random-movies
       from:
-        - piratebay:
-            category: movies
-        - limetorrents:
-            category: movies
-        - extratorrent:
-            category: movies
+        - publichd
+	- rarbg
+        - torrentz: verified
     require_field: imdb_url
     imdb_lookup: yes
     seen_movies: strict
