@@ -323,11 +323,9 @@ tasks:
         - next_series_episodes:
             from_start: yes
       from:
-        - publichd:
-	    category: HDTV
-	- rarbg:
-	    category: HDTV
-        - torrentz: verified
+        - piratebay: yes
+        - rarbg:
+           category: HDTV
     content_size:
       max: 500
       min: 20
@@ -348,9 +346,7 @@ tasks:
       what:
         - movie_list: mymovies
       from:
-        - publichd
-	- rarbg
-        - torrentz: verified
+        - piratebay: yes
     list_match:
       from:
         - movie_list: mymovies
@@ -359,7 +355,7 @@ tasks:
       min: 20
 
 # pindahkan file dari folder download ke exists
-  move-series:
+  copy-series:
     priority: 11
     disable:
       - seen
@@ -375,7 +371,7 @@ tasks:
     accept_all: yes
     seen: local
     require_field: series_name
-    move:
+    copy:
       to: "{? folder.series ?}/{{tvdb_series_name}}/Season {{tvdb_season}}"
       along:
         extensions:
@@ -390,7 +386,7 @@ tasks:
         phase: find /home/'{? user ?}'/torrent/Series/* -type d -empty -delete
 
 # pindahkan file dari folder download ke exists
-  move-movies:
+  copy-movies:
     priority: 12
     disable:
       - seen
@@ -405,7 +401,7 @@ tasks:
     accept_all: yes
     seen: local
     require_field: imdb_name
-    move:
+    copy:
       to: "{? folder.movies ?}/{{ imdb_name }}"
       along:
         extensions:
@@ -587,9 +583,7 @@ tasks:
       what:
         - movie_list: random-movies
       from:
-        - publichd
-	- rarbg
-        - torrentz: verified
+        - piratebay: yes
     require_field: imdb_url
     imdb_lookup: yes
     seen_movies: strict
@@ -664,8 +658,8 @@ schedules:
       hours: 4
 
   - tasks: 
-    - move-series
-    - move-movies
+    - copy-series
+    - copy-movies
     interval: 
       minutes: 15
 
