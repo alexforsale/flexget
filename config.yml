@@ -321,11 +321,11 @@ tasks:
         optimistic: 28 days
       what:
         - next_series_episodes:
-            from_start: yes
+            from_start: no
       from:
         - piratebay: yes
         - rarbg:
-           category: HDTV
+            category: HDTV
     content_size:
       max: 500
       min: 20
