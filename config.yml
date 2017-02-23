@@ -11,12 +11,6 @@ templates:
     free_space:
       path: /home/'{? user ?}'/torrent/
       space: 5000
-    free_space:
-      path: '{? folder.movies ?}'
-      space: 5000
-    free_space:
-      path: '{? folder.series ?}'
-      space: 5000
     pathscrub: windows
     no_entries_ok: yes
 
