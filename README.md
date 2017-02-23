@@ -116,4 +116,7 @@ flexget`). Jika ingin menggunakan file konfigurasi yang berbeda, tambahkan
 dengan `-c [path]`
 
 Tapi sebaiknya sebelum memasukkan task cron ini, pastikan juga konfigurasinya
-berjalan dengan lancar, bisa di test dengan perintah `flexget --test execute`
+berjalan dengan lancar, bisa di test dengan perintah `flexget --test execute`.
+Jika ingin check task tertentu saja, syntax-nya `flexget --test execute --task
+'namatasknya'`.
+
