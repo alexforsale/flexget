@@ -384,6 +384,12 @@ tasks:
     exec:
       on_exit:
         phase: find /home/'{? user ?}'/torrent/Series/* -type d -empty -delete
+    list_add:
+      - subtitle_list:
+          list: need_subs
+          languages:
+            - en
+            - id
 
 # pindahkan file dari folder download ke exists
   copy-movies:
@@ -414,6 +420,12 @@ tasks:
     exec:
       on_exit:
         phase: find /home/'{? user ?}'/torrent/Movies/* -type d -empty -delete
+    list_add:
+      - subtitle_list:
+          list: need_subs
+          languages:
+            - en
+            - id
 
 # hapus list transmission yang sudah selesai didownload lebih dari 1 jam
   clean-up-transmission:
@@ -596,7 +608,7 @@ tasks:
 
 # check library untuk subtitle
 #  check_subs:
-#     disable:
+#    disable:
 #      - seen
 #      - seen_info_hash
 #    metainfo_series: yes
@@ -612,40 +624,36 @@ tasks:
 #      min: 50
 #    check_subtitles: yes
 #    if:
-#      - subtitles is None: accept
+#    - "'subtitles is none' in subtitles": accept
 #    list_add:
 #      - subtitle_list:
 #          list: subtitles
-#          languages:
-#            - en
-#            - id
 
 # download subtitles yang diperlukan
-#  get_subs:
-#    no_entries_ok: yes
-#    disable:
-#      - seen
-#      - seen_info_hash
-#    subtitle_list:
-#      list: subtitles
-#      recursion_depth: 3
-#    list_match:
-#      from:
-#        - subtitle_list:
-#            list: subtitles
-#    subliminal:
-#      languages:  # languages is required, but if a language is specified in subtitle_list, it takes priority
-#        - en
-#      providers: 
-#        - opensubtitles
-#        - podnapisi
-#      single: no  # will append the language code to the subtitle file
-#      hearing_impaired: yes
-#      exact_match: no
-#      authentication:
-#        opensubtitles:
-#          username: '{? opensubtitles.username ?}'
-#          password: '{? opensubtitles.password ?}'
+  get_subs:
+    no_entries_ok: yes
+    subtitle_list:
+      list: need_subs
+      recursion_depth: 3
+    list_match:
+      from:
+        - subtitle_list:
+            list: need_subs
+    subliminal:
+      languages:  # languages is required, but if a language is specified in subtitle_list, it takes priority
+        - en
+      alternatives:
+        - id
+      providers: 
+        - opensubtitles
+        - podnapisi
+      single: no  # will append the language code to the subtitle file
+      hearing_impaired: yes
+      exact_match: no
+      authentication:
+        opensubtitles:
+          username: '{? opensubtitles.username ?}'
+          password: '{? opensubtitles.password ?}'
 
 # bisa juga dicantumkan dalam task, seperti di task movies-search
 schedules:
