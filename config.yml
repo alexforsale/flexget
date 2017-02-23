@@ -110,8 +110,8 @@ templates:
     inputs:
       - rss: 
           url: https://kat.am/movies/?rss=1
-      - rss:
-          url: https://yts.ag/rss
+#      - rss:
+#          url: https://yts.ag/rss
       - rss:
           url: https://rarbg.to/rssdd.php?category=movies
       - rss:
