@@ -29,6 +29,7 @@ Dependencies:
 * [kodi](https://kodi.tv/)
 * subliminal untuk download subtitle (pip install subliminal)
 * telegram bot (pip install python-telegram-bot)
+* python-dbm (python3-dbm) untuk subliminal
 
 Cara penggunaan
 -----
