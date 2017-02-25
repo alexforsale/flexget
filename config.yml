@@ -130,7 +130,7 @@ templates:
         - '/home/{? user ?}/torrent/Series/'
       lookup: imdb
     imdb_lookup: yes
-    quality: dvdscr-dvdrip
+    quality: dvdscr-bluray
 # filter berdasarkan filename
     regexp:
       from: title
