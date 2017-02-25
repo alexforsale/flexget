@@ -91,21 +91,11 @@ templates:
     inputs:
       - rss: 
           url: https://eztv.yt/ezrss.xml
-#      - rss:
-#          url: http://www.torlock.com/television/rss.xml
-#      - rss: 
-#          url: https://rarbg.to/rssdd.php?category=tv
-#      - rss:
-#          url: http://extratorrent.cc/rss.xml?cid=8&type=last
-#      - rss:
-#          url: https://www.limetorrents.cc/rss/20/
 
   rss-movies:
     inputs:
       - rss: 
           url: https://kat.am/movies/?rss=1
-#      - rss:
-#          url: https://yts.ag/rss
       - rss:
           url: https://rarbg.to/rssdd.php?category=movies
       - rss:
@@ -600,29 +590,6 @@ tasks:
       max: 4000
       min: 20
 
-# check library untuk subtitle
-#  check_subs:
-#    disable:
-#      - seen
-#      - seen_info_hash
-#    metainfo_series: yes
-#    thetvdb_lookup: yes
-#    imdb_lookup: yes
-#    filesystem:
-#      path:
-#        - "/{? folder.movies ?}"
-#        - "/{? folder.series ?}"
-#      regexp: '.*\.(avi|mkv|mp4)$'
-#      recursive: yes
-#    content_size:
-#      min: 50
-#    check_subtitles: yes
-#    if:
-#    - "'subtitles is none' in subtitles": accept
-#    list_add:
-#      - subtitle_list:
-#          list: subtitles
-
 # download subtitles yang diperlukan
   get_subs:
     no_entries_ok: yes
@@ -703,7 +670,6 @@ schedules:
       hours: 3
 
   - tasks: 
-    - check_subs
     - get_subs
     interval:
       minutes: 120
