@@ -582,7 +582,8 @@ tasks:
       what:
         - movie_list: random-movies
       from:
-        - piratebay: yes
+        - rarbg:
+            category: HDTV
     require_field: imdb_url
     imdb_lookup: yes
     seen_movies: strict
