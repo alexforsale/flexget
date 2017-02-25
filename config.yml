@@ -452,7 +452,6 @@ tasks:
       - seen_info_hash
       - retry_failed
     metainfo_series: yes
-    thetvdb_lookup: yes
     filesystem:
       path: '/{? folder.series ?}'
       retrieve: dirs
@@ -461,13 +460,15 @@ tasks:
           replace:
             regexp: '$'
             format: ' S01E01'
-    accept_all: yes
+    thetvdb_lookup: yes
     if:
       - tvdb_status == 'Ended': reject
-    list_add:
-      - thetvdb_list:
-          username: '{? thetvdb.user ?}'
-          account_id: '{? thetvdb.id ?}'
+    list_match:
+      from:
+        - thetvdb_list:
+            username: '{? thetvdb.user ?}'
+            account_id: '{? thetvdb.id ?}'
+      action: reject
 
 # task untuk torrent yang didownload secara manual, cukup menaruh file .torrent di
 # masing - masing path untuk series. movie atau anime, dan akan diproses oleh flexget
