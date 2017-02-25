@@ -419,7 +419,9 @@ tasks:
       port: 9091
       username: transmission
       password: transmission
-      finished_for: 1 hours
+      finished_for: 1 days
+      min_ratio: 1
+      delete_files: yes
     disable: details
 
 
