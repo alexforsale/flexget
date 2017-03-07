@@ -13,6 +13,7 @@ templates:
       space: 5000
     pathscrub: windows
     no_entries_ok: yes
+    seen_movies: strict
 
 tasks:
   versioncheck:
@@ -20,3 +21,22 @@ tasks:
       check_for_dev_version: yes
       interval: 1
 
+  check_existing_movies:
+    filesystem:
+      path:
+        - '{? folder.movies ?}'
+        - '{? staging.movies ?}'
+      retrieve:
+        - files
+        - dirs
+      recursive: yes
+      regexp: '.*\.(avi|mkv|mp4|m4v|iso)$'
+    only_new: yes
+    imdb_lookup: yes
+    trakt_lookup: yes
+    nfo_lookup: yes
+    parsing:
+      movie: guessit
+    list_add:
+      - movie_list: existing movies
+    interval: 1
