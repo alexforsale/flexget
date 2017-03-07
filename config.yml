@@ -14,6 +14,12 @@ templates:
     pathscrub: windows
     no_entries_ok: yes
 
+  torrents:
+    torrent_alive:
+      min_seeds: 10
+      reject_for: 30 minutes
+    magnets: no
+  
   series:
     metainfo_series: yes
     thetvdb_lookup: yes
