@@ -39,7 +39,7 @@ tasks:
     list_add:
       - movie_list: existing movies
 
-  check_existing_series:
+  check_existing_episodes:
     filesystem:
       path:
         - '{? folder.series ?}'
@@ -51,9 +51,10 @@ tasks:
       regexp: '.*\.(avi|mkv|mp4|m4v|iso)$'
     all_series: yes
     only_new: yes
+    metainfo_series: yes
     thetvdb_lookup: yes
     parsing:
       series: guessit
     list_add:
-      - entry_list: existing series
+      - entry_list: existing episodes
 
