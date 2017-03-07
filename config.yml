@@ -39,4 +39,3 @@ tasks:
       movie: guessit
     list_add:
       - movie_list: existing movies
-    interval: 1
