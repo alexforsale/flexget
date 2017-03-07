@@ -19,6 +19,22 @@ templates:
       min_seeds: 10
       reject_for: 30 minutes
     magnets: no
+
+  rss-tv:
+    inputs:
+      - rss:
+          url: https://eztv.yt/ezrss.xml
+
+  rss-movies:
+    inputs:
+      - rss:
+          url: https://kat.am/movies/?rss=1
+      - rss:
+          url: https://rarbg.to/rssdd.php?category=movies
+      - rss:
+          url: http://extratorrent.cc/rss.xml?cid=4&type=last
+      - rss:
+          url: https://www.limetorrents.cc/rss/16/
   
   series:
     metainfo_series: yes
