@@ -14,3 +14,9 @@ templates:
     pathscrub: windows
     no_entries_ok: yes
 
+tasks:
+  versioncheck:
+    version_checker:
+      check_for_dev_version: yes
+      interval: 1
+
