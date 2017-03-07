@@ -150,3 +150,59 @@ tasks:
     content_size:
       max: 900
       min: 20
+
+  discover-movies:
+    template:
+      - movies
+      - transmission-movies
+    discover:
+      what:
+        - trakt_list:
+            username: '{? trakt.user ?}'
+            account: '{? trakt.account ?}'
+            list: watchlist
+            type: movies
+      from:
+        - rarbg:
+            category: [2, 5, 8, 9, 20, 15, 16]
+        - piratebay: yes
+    list_match:
+      from:
+        - trakt_list:
+            username: '{? trakt.user ?}'
+            account: '{? trakt.account ?}'
+            list: Watchlist
+            type: movies
+    content_size:
+      max: 4000
+      min: 20
+
+  download-series-manual:
+    disable:
+      - seen
+      - seen_info_hash
+    template:
+      - series
+      - transmission-series
+    filesystem:
+      path: '{? staging.series ?}'
+      mask: '*.torrent'
+    accept_all: yes
+    exec:
+      on_output:
+        for_accepted: rm -rf "{{location}}"
+
+  download-movies-manual:
+    disable:
+      - seen
+      - seen_info_hash
+    template:
+      - movies
+      - transmission-movies
+    filesystem:
+      path: '{? staging.series ?}'
+      mask: '*.torrent'
+    accept_all: yes
+    exec:
+      on_output:
+        for_accepted: rm -rf "{{location}}"
