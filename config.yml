@@ -15,6 +15,11 @@ templates:
     no_entries_ok: yes
 
   series:
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    nfo_lookup: yes
+    parsing:
+      series: guessit
     configure_series:
       settings:
         qualities:
@@ -83,6 +88,8 @@ tasks:
       - movie_list: existing movies
 
   check_existing_episodes:
+    template:
+      - series
     filesystem:
       path:
         - '{? folder.series ?}'
@@ -94,10 +101,6 @@ tasks:
       regexp: '.*\.(avi|mkv|mp4|m4v|iso)$'
     all_series: yes
     only_new: yes
-    metainfo_series: yes
-    thetvdb_lookup: yes
-    parsing:
-      series: guessit
     list_add:
       - entry_list: existing episodes
     set_series_begin: yes
@@ -105,16 +108,14 @@ tasks:
   update_series_list:
     disable:
       - seen
+    template:
+      - series
     filesystem:
       path:
         - '{? folder.series ?}'
         - '{? staging.series ?}'
       retrieve: dirs
       recursive: no
-    metainfo_series: yes
-    thetvdb_lookup: yes
-    parsing:
-      series: guessit
     manipulate:
       - title:
           replace:
