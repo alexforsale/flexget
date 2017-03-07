@@ -257,3 +257,86 @@ tasks:
     exec:
       on_output:
         for_accepted: rm -rf "{{location}}"
+
+  random-movies-listing:
+    template:
+      - rss-movies
+      - torrents
+      - movies
+      - reject
+    priority: 20
+    disable:
+      - seen
+      - seen_info_hash
+      - retry_failed
+    imdb:
+      min_score: 7.0
+      min_votes: 800
+      min_year: 2005
+      reject_genres:
+        - News
+        - Documentary
+        - Horror
+        - Biography
+        - Reality-Tv
+        - Horror
+        - Musical
+        - Music
+      accept_languages:
+        - english
+    regexp:
+      from: title
+      reject:
+        - ts
+        - hindi
+        - german
+        - french
+        - s\d+e\d+: {from: title}
+        - '\d{4}.\d{2}.\d{2}': {from: title}
+        - \d+x\d+: {from: title}
+    require_field: imdb_url
+    imdb_lookup: yes
+    seen_movies: strict
+    list_add:
+      - movie_list: random-movies
+
+  random-movies-download:
+    priority: 21
+    template:
+      - torrents
+      - movies
+      - transmission-movies
+      - reject
+    disable:
+      - seen
+      - seen_info_hash
+      - retry_failed
+    limit_new: 2
+    proper_movies: yes
+    discover:
+      what:
+        - movie_list: random-movies
+      from:
+        - rarbg:
+            category: HDTV
+    require_field: imdb_url
+    imdb_lookup: yes
+    seen_movies: strict
+    list_match:
+      from:
+        - movie_list: random-movies
+    content_size:
+      max: 4000
+      min: 20
+
+  download-series-rss:
+    template:
+      - series
+      - rss-tv
+      - torrents
+      - transmission-series
+      - reject
+    content_size:
+      max: 900
+      min: 20
+
