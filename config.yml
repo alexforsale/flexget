@@ -29,6 +29,10 @@ templates:
         filesystem:
           -  '{? staging.series ?}'
           -  '{? folder.series ?}'
+    exists_series:
+      path:
+        -  '{? staging.series ?}'
+        -  '{? folder.series ?}'
 
   transmission-global:
     _transmission-settings: &transmission-settings
