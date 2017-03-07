@@ -437,4 +437,5 @@ tasks:
       finished_for: 1 days
       min_ratio: 1
       delete_files: yes
-      disable: details
+    disable: details
+
