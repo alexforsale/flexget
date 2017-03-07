@@ -14,6 +14,16 @@ templates:
     pathscrub: windows
     no_entries_ok: yes
 
+  series:
+    configure_series:
+      settings:
+        qualities:
+          - hdtv <720p
+        identified_by: ep
+      from:
+        filesystem:
+          -  '{? staging.series ?}'
+          -  '{? folder.series ?}'
 
   transmission-global:
     _transmission-settings: &transmission-settings
