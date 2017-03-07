@@ -439,3 +439,12 @@ tasks:
       delete_files: yes
     disable: details
 
+  fill-thetvdb-list:
+    entry_list: existing series
+    accept_all: yes
+    thetvdb_lookup: yes
+    list_add:
+      - thetvdb_list:
+          username: '{? thetvdb.user ?}'
+          account_id: '{? thetvdb.id ?}'
+    seen: local
