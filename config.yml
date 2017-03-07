@@ -340,3 +340,90 @@ tasks:
       max: 900
       min: 20
 
+  get_subs:
+    no_entries_ok: yes
+    subtitle_list:
+      list: need_subs
+      recursion_depth: 3
+    list_match:
+      from:
+        - subtitle_list:
+            list: need_subs
+    subliminal:
+      languages:
+        - en
+      alternatives:
+        - id
+      providers: 
+        - opensubtitles
+        - podnapisi
+      single: no
+      hearing_impaired: yes
+      exact_match: no
+      authentication:
+        opensubtitles:
+          username: '{? opensubtitles.username ?}'
+          password: '{? opensubtitles.password ?}'
+
+  copy-series:
+    template: series
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    filesystem:
+      path: '{? staging.series ?}'
+      recursive: yes
+      retrieve: files
+      regexp: '.*\.(avi|mkv|mp4)$'
+    accept_all: yes
+    seen: local
+    require_field: series_name
+    copy:
+      to: "{? folder.series ?}/{{tvdb_series_name}}/Season {{tvdb_season}}"
+      along:
+        extensions:
+          - srt
+          - sub
+        subdirs:
+          - subs
+    content_size:
+      min: 50
+    exec:
+      on_exit:
+        phase: find '{? staging.series ?}'/* -type d -empty -delete
+    list_add:
+      - subtitle_list:
+          list: need_subs
+          languages:
+            - en
+            - id
+
+  copy-movies:
+    template: movies
+    imdb_lookup: yes
+    filesystem:
+      path: '{? staging.movies ?}'
+      recursive: yes
+      retrieve: files
+      regexp: '.*\.(avi|mkv|mp4)$'
+    accept_all: yes
+    seen: local
+    require_field: imdb_name
+    copy:
+      to: "{? folder.movies ?}/{{ imdb_name }}"
+      along:
+        extensions:
+          - srt
+          - sub
+        subdirs:
+          - subs
+    content_size:
+      min: 50
+    exec:
+      on_exit:
+        phase: find '{? staging.movies ?}'/* -type d -empty -delete
+    list_add:
+      - subtitle_list:
+          list: need_subs
+          languages:
+            - en
+            - id
