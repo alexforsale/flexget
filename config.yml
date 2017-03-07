@@ -14,6 +14,39 @@ templates:
     pathscrub: windows
     no_entries_ok: yes
 
+
+  transmission-global:
+    _transmission-settings: &transmission-settings
+      enabled: yes
+      host: localhost
+      port: 9091
+      username: transmission
+      password: transmission
+      ratio: 1
+      include_subs: yes
+    retry_failed:
+      retry_time: 10 seconds
+      retry_time_multiplier: 1
+      max_retries: 4
+
+  transmission-series:
+    transmission:
+      <<: *transmission-settings
+      main_file_only: yes
+      include_subs: yes
+      rename_like_files: yes
+      path: '{? staging.series ?}/{{tvdb_series_name|default(series_name)|pathscrub}}/'
+      content_filename: "{{tvdb_series_name|default(series_name)|pathscrub}} - {{tvdb_ep_id|default(series_id)}}{% if tvdb_ep_name|default(False) %} - {{tvdb_ep_name|pathscrub}}{% endif %}{% if quality|default(False) %} - [{{quality}}]{% endif %}"
+
+  transmission-movies:
+    transmission:
+      <<: *transmission-settings
+      main_file_only: yes
+      include_subs: yes
+      rename_like_files: yes
+      content_filename: "{{tmdb_name|pathscrub}} ({{tmdb_year}}){% if quality|default(False) %} - [{{quality}}]{% endif %}"
+      path: '{? staging.movies ?}/{{movie_name|pathscrub}}'
+
 tasks:
   versioncheck:
     version_checker:
