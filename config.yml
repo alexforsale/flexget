@@ -13,7 +13,6 @@ templates:
       space: 5000
     pathscrub: windows
     no_entries_ok: yes
-    seen_movies: strict
 
 tasks:
   versioncheck:
