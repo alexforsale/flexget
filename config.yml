@@ -34,6 +34,17 @@ templates:
         -  '{? staging.series ?}'
         -  '{? folder.series ?}'
 
+  movies:
+    imdb_lookup: yes
+    trakt_lookup: yes
+    nfo_lookup: yes
+    parsing:
+      movie: guessit
+    exists_movie:
+      path:
+        - '{? folder.movies ?}'
+        - '{? staging.movies ?}' 
+
   transmission-global:
     _transmission-settings: &transmission-settings
       enabled: yes
@@ -73,6 +84,8 @@ tasks:
       interval: 1
 
   check_existing_movies:
+    template:
+      - movies
     filesystem:
       path:
         - '{? folder.movies ?}'
@@ -83,11 +96,6 @@ tasks:
       recursive: yes
       regexp: '.*\.(avi|mkv|mp4|m4v|iso)$'
     only_new: yes
-    imdb_lookup: yes
-    trakt_lookup: yes
-    nfo_lookup: yes
-    parsing:
-      movie: guessit
     list_add:
       - movie_list: existing movies
 
