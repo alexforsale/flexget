@@ -58,3 +58,24 @@ tasks:
     list_add:
       - entry_list: existing episodes
 
+  update_series_list:
+    disable:
+      - seen
+    filesystem:
+      path:
+        - '{? folder.series ?}'
+        - '{? staging.series ?}'
+      retrieve: dirs
+      recursive: no
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    parsing:
+      series: guessit
+    manipulate:
+      - title:
+          replace:
+            regexp: '$'
+            format: ' S01E01'
+    accept_all: yes
+    list_add:
+      - entry_list: existing series
