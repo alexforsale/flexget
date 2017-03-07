@@ -123,3 +123,17 @@ tasks:
     accept_all: yes
     list_add:
       - entry_list: existing series
+
+  discover-series:
+    template:
+      - series
+      - transmission-series
+    discover:
+      what:
+        - next_series_episodes: yes
+      from:
+        - rarbg:
+            category: x264
+    content_size:
+      max: 900
+      min: 20
