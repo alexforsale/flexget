@@ -57,6 +57,7 @@ tasks:
       series: guessit
     list_add:
       - entry_list: existing episodes
+    set_series_begin: yes
 
   update_series_list:
     disable:
