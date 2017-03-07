@@ -448,3 +448,36 @@ tasks:
           username: '{? thetvdb.user ?}'
           account_id: '{? thetvdb.id ?}'
     seen: local
+
+schedules:
+  - tasks:
+    - versioncheck
+    - update_series_list
+    - check-existing-episodes
+    - discover-movies
+    - random-movies-listing
+    - random-movies-download
+    - fill-thetvdb-list
+    - check-existing-movies
+    interval:
+      days: 1
+  - tasks:
+    - copy-series
+    - copy-movies
+    interval:
+      minutes: 15
+  - tasks:
+    - clean-up-transmission
+    interval:
+      hours: 3
+  - tasks:
+    - download-series-manual
+    - download-movies-manual
+    interval:
+      minutes: 15
+  - tasks:
+    - discover-series
+    - download-series-rss
+    - get-subs
+    interval:
+      hours: 2
