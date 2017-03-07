@@ -187,7 +187,9 @@ tasks:
   discover-series:
     template:
       - series
+      - torrents
       - transmission-series
+      - reject
     discover:
       what:
         - next_series_episodes: yes
@@ -201,7 +203,9 @@ tasks:
   discover-movies:
     template:
       - movies
+      - torrents
       - transmission-movies
+      - reject
     discover:
       what:
         - trakt_list:
