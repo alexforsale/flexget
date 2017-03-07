@@ -38,3 +38,22 @@ tasks:
       movie: guessit
     list_add:
       - movie_list: existing movies
+
+  check_existing_series:
+    filesystem:
+      path:
+        - '{? folder.series ?}'
+        - '{? staging.series ?}'
+      retrieve:
+        - files
+        - dirs
+      recursive: yes
+      regexp: '.*\.(avi|mkv|mp4|m4v|iso)$'
+    all_series: yes
+    only_new: yes
+    thetvdb_lookup: yes
+    parsing:
+      series: guessit
+    list_add:
+      - entry_list: existing series
+
