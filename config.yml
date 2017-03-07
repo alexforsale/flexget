@@ -14,6 +14,31 @@ templates:
     pathscrub: windows
     no_entries_ok: yes
 
+  reject:
+    regexp:
+      reject:
+        - (s|d)ub(s|bed|lado|titulado)?\b
+        - \bdual\b
+        - \b3d\b
+        - \b(fr)(ench)?\b
+        - \b(ita)(lian)?\b
+        - \b(spa)(nish)?\b
+        - \b(ger)(man)?\b
+        - \bcastellano\b
+        - \brus(sian)?\b
+        - \bportugese?\b
+        - \btruefrench?\b
+        - \blatin(o)?\b
+        - msd
+        - afg
+        - line
+        - hc
+        - korsub
+    content_filter:
+      reject:
+        - '*.rar'
+        - '*.zip'
+
   torrents:
     torrent_alive:
       min_seeds: 10
