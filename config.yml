@@ -112,7 +112,7 @@ templates:
       include_subs: yes
       rename_like_files: yes
       path: '{? staging.series ?}/{{tvdb_series_name|default(series_name)|pathscrub}}/'
-      content_filename: "{{tvdb_series_name|default(series_name)|pathscrub}}-{{tvdb_ep_id|default(series_id)}}{% if tvdb_ep_name|default(False) %}-{{tvdb_ep_name|pathscrub}}{% endif %}{% if quality|default(False) %}-[{{quality}}]{% endif %}"
+      content_filename: "{{tvdb_series_name|default(series_name)|replace(' ','.')|pathscrub}}-{{tvdb_ep_id|default(series_id)|replace(' ','.')}}{% if tvdb_ep_name|default(False) %}-{{tvdb_ep_name|replace(' ','.')|pathscrub}}{% endif %}{% if quality|default(False) %}-({{quality}}|replace(' ','.')){% endif %}"
 
 
   transmission-movies:
@@ -122,7 +122,7 @@ templates:
       include_subs: yes
       rename_like_files: yes
       path: '{? staging.movies ?}/{{movie_name|pathscrub}}'
-      content_filename: "{{tmdb_name|pathscrub}}-({{tmdb_year}}){% if quality|default(False) %}-[{{quality}}]{% endif %}"
+      content_filename: "{{tmdb_name|replace(' ','.')|pathscrub}}-({{tmdb_year}}){% if quality|default(False) %}-({{quality}}|replace(' ','.')){% endif %}"
 
 tasks:
   versioncheck:
