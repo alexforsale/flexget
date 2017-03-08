@@ -234,13 +234,16 @@ tasks:
     disable:
       - seen
       - seen_info_hash
-    template:
-      - series
-      - transmission-series
+    metainfo_series: yes
+    thetvdb_lookup: yes
+    parsing:
+      series: guessit
     filesystem:
       path: '{? staging.series ?}'
       mask: '*.torrent'
     accept_all: yes
+    template:
+      - transmission-series
     exec:
       on_output:
         for_accepted: rm -rf "{{location}}"
@@ -249,13 +252,14 @@ tasks:
     disable:
       - seen
       - seen_info_hash
-    template:
-      - movies
-      - transmission-movies
+    imdb_lookup: yes
+    trakt_lookup: yes
     filesystem:
       path: '{? staging.series ?}'
       mask: '*.torrent'
     accept_all: yes
+    template:
+      - transmission-movies
     exec:
       on_output:
         for_accepted: rm -rf "{{location}}"
