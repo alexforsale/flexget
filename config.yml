@@ -344,7 +344,7 @@ tasks:
       max: 900
       min: 20
 
-  get_subs:
+  get-subs:
     no_entries_ok: yes
     subtitle_list:
       list: need_subs
