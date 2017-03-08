@@ -382,7 +382,10 @@ tasks:
       regexp: '.*\.(avi|mkv|mp4)$'
     accept_all: yes
     seen: local
-    require_field: series_name
+    require_field:
+      - series_name
+      - tvdb_ep_id
+      - tvdb_ep_name
     copy:
       to: "{? folder.series ?}/{{tvdb_series_name}}/Season {{tvdb_season}}"
       along:
