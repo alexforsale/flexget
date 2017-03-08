@@ -72,14 +72,15 @@ templates:
         qualities:
           - hdtv <720p
         identified_by: ep
+        propers: no
       from:
         filesystem:
           -  '{? staging.series ?}'
           -  '{? folder.series ?}'
     exists_series:
       path:
-        -  '{? staging.series ?}'
-        -  '{? folder.series ?}'
+        -  '{? staging.series ?}/{{series_name}}'
+        -  '{? folder.series ?}/{{series_name}}'
 
   movies:
     imdb_lookup: yes
