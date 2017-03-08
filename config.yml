@@ -79,7 +79,7 @@ templates:
           -  '{? folder.series ?}'
     exists_series:
       path:
-        -  '{? staging.series ?}/{{series_name}}'
+        -  '{? staging.series ?}/'
         -  '{? folder.series ?}/{{series_name}}'
 
   movies:
