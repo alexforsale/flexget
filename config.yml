@@ -476,7 +476,7 @@ schedules:
     - copy-series
     - copy-movies
     interval:
-      minutes: 15
+      hours: 1
   - tasks:
     - clean-up-transmission
     interval:
@@ -491,4 +491,4 @@ schedules:
     - download-series-rss
     - get-subs
     interval:
-      hours: 2
+      minutes: 30
