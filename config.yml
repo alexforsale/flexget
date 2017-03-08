@@ -365,7 +365,9 @@ tasks:
           password: '{? opensubtitles.password ?}'
 
   copy-series:
-    template: series
+    disable:
+      - seen
+      - seen_info_hash
     metainfo_series: yes
     thetvdb_lookup: yes
     filesystem:
@@ -397,7 +399,9 @@ tasks:
             - id
 
   copy-movies:
-    template: movies
+    disable:
+      - seen
+      - seen_info_hash
     imdb_lookup: yes
     filesystem:
       path: '{? staging.movies ?}'
