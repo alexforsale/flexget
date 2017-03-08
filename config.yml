@@ -482,7 +482,7 @@ schedules:
     - download-series-manual
     - download-movies-manual
     interval:
-      minutes: 15
+      minutes: 40
   - tasks:
     - discover-series
     - download-series-rss
