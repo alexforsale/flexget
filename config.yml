@@ -124,6 +124,34 @@ templates:
       path: '{? staging.movies ?}/{{movie_name|pathscrub}}'
       content_filename: "{{tmdb_name|pathscrub}}-({{tmdb_year}}){% if quality|default(False) %}-[{{quality}}]{% endif %}"
 
+  series-download-notify:
+    notify:
+      entries:
+        title: 'New Episode'
+        message: '{{series_name}} season {{series_season}} episode {{series_episode}}'
+        via:
+          - pushbullet:
+              api_key: '{? pusbullet.apikey ?}'
+          - telegram:
+              bot_token: '{? telegram.bot_token ?}'
+              parse_mode: markdown
+              recipients:
+                - username: '{? telegram.username ?}'
+
+  movies-download-notify:
+    notify:
+      entries:
+        title: 'New Movie'
+        message: '{{title}}'
+        via:
+          - pushbullet:
+              api_key: '{? pusbullet.apikey ?}'
+          - telegram:
+              bot_token: '{? telegram.bot_token ?}'
+              parse_mode: markdown
+              recipients:
+                - username: '{? telegram.username ?}'
+
 tasks:
   versioncheck:
     version_checker:
@@ -193,6 +221,7 @@ tasks:
       - torrents
       - transmission-series
       - reject
+      - series-download-notify
     discover:
       what:
         - next_series_episodes: yes
@@ -209,6 +238,7 @@ tasks:
       - torrents
       - transmission-movies
       - reject
+      - movies-download-notify
     discover:
       what:
         - trakt_list:
@@ -245,6 +275,7 @@ tasks:
     accept_all: yes
     template:
       - transmission-series
+      - series-download-notify
     exec:
       on_output:
         for_accepted: rm -rf "{{location}}"
@@ -261,6 +292,7 @@ tasks:
     accept_all: yes
     template:
       - transmission-movies
+      - movies-download-notify
     exec:
       on_output:
         for_accepted: rm -rf "{{location}}"
@@ -314,6 +346,7 @@ tasks:
       - movies
       - transmission-movies
       - reject
+      - movies-download-notify
     disable:
       - seen
       - seen_info_hash
@@ -343,6 +376,7 @@ tasks:
       - torrents
       - transmission-series
       - reject
+      - series-download-notify
     content_size:
       max: 900
       min: 20
