@@ -130,7 +130,11 @@ tasks:
       check_for_dev_version: yes
       interval: 1
 
-  check_existing_movies:
+  check-existing-movies:
+    disable:
+      - seen
+      - seen_info_hash
+      - exists_movies
     template:
       - movies
     filesystem:
@@ -146,7 +150,7 @@ tasks:
     list_add:
       - movie_list: existing movies
 
-  check_existing_episodes:
+  check-existing-episodes:
     template:
       - series
     filesystem:
@@ -164,7 +168,7 @@ tasks:
       - entry_list: existing episodes
     set_series_begin: yes
 
-  update_series_list:
+  update-series-list:
     disable:
       - seen
     template:
@@ -463,7 +467,7 @@ tasks:
 schedules:
   - tasks:
     - versioncheck
-    - update_series_list
+    - update-series-list
     - check-existing-episodes
     - discover-movies
     - random-movies-listing
