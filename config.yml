@@ -146,7 +146,7 @@ tasks:
         - dirs
       recursive: yes
       regexp: '.*\.(avi|mkv|mp4|m4v|iso)$'
-    only_new: yes
+    accept_all: yes
     list_add:
       - movie_list: existing movies
 
