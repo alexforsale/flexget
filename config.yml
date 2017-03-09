@@ -166,7 +166,6 @@ tasks:
     only_new: yes
     list_add:
       - entry_list: existing episodes
-    set_series_begin: yes
 
   update-series-list:
     disable:
@@ -506,6 +505,18 @@ tasks:
           list: movie-list
           type: movies
 
+  series-trakt-set-begin:
+    next_trakt_episodes:
+      username: '{? trakt.user ?}'
+      account: '{? trakt.account ?}'
+      list: episodes-list
+      strip_dates: yes
+      context: collected
+      position: next
+    accept_all: yes
+    set_series_begin: yes
+    disable: seen
+
 schedules:
   - tasks:
     - versioncheck
@@ -526,6 +537,7 @@ schedules:
       hours: 1
   - tasks:
     - clean-up-transmission
+    - series-trakt-set-begin
     interval:
       hours: 3
   - tasks:
