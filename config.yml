@@ -67,8 +67,6 @@ templates:
   series:
     metainfo_series: yes
     thetvdb_lookup: yes
-    parsing:
-      series: guessit
     configure_series:
       settings:
         qualities:
@@ -87,8 +85,6 @@ templates:
   movies:
     imdb_lookup: yes
     trakt_lookup: yes
-    parsing:
-      movie: guessit
     exists_movie:
       path:
         - '{? folder.movies ?}'
