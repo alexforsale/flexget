@@ -51,6 +51,8 @@ templates:
     inputs:
       - rss:
           url: https://eztv.yt/ezrss.xml
+      - rss:
+          url: '{? showrss.url ?}'
 
   rss-movies:
     inputs:
