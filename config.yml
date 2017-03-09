@@ -34,7 +34,6 @@ templates:
         - \blatin(o)?\b
         - msd
         - afg
-        - line
         - hc
         - korsub
     content_filter:
