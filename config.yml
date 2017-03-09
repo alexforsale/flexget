@@ -464,6 +464,48 @@ tasks:
           account_id: '{? thetvdb.id ?}'
     seen: local
 
+  update-trakt-episodes:
+    disable:
+      - seen
+      - seen_info_hash
+    entry_list: existing episodes
+    trakt_lookup: yes
+    accept_all: yes
+    list_add:
+      - trakt_list:
+          username: '{? trakt.user ?}'
+          account: '{? trakt.account ?}'
+          list: episodes-list
+          type: shows
+
+  update-trakt-series:
+    disable:
+      - seen
+      - seen_info_hash
+    entry_list: existing series
+    trakt_lookup: yes
+    accept_all: yes
+    list_add:
+      - trakt_list:
+          username: '{? trakt.user ?}'
+          account: '{? trakt.account ?}'
+          list: series-list
+          type: shows
+
+  update-trakt-movies:
+    disable:
+      - seen
+      - seen_info_hash
+    movie_list: existing movies
+    trakt_lookup: yes
+    accept_all: yes
+    list_add:
+      - trakt_list:
+          username: '{? trakt.user ?}'
+          account: '{? trakt.account ?}'
+          list: movie-list
+          type: movies
+
 schedules:
   - tasks:
     - versioncheck
@@ -474,6 +516,7 @@ schedules:
     - random-movies-download
     - fill-thetvdb-list
     - check-existing-movies
+    - update-trakt-*
     interval:
       days: 1
   - tasks:
