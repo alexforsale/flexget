@@ -462,11 +462,9 @@ tasks:
           - sub
         subdirs:
           - subs
+    exists: "{? folder.movies ?}"
     content_size:
       min: 50
-    exec:
-      on_exit:
-        phase: find '{? staging.movies ?}'/* -type d -empty -delete
     list_add:
       - subtitle_list:
           list: need_subs
