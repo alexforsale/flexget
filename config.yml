@@ -68,6 +68,7 @@ templates:
   series:
     metainfo_series: yes
     thetvdb_lookup: yes
+    trakt_lookup: yes
     configure_series:
       settings:
         qualities:
