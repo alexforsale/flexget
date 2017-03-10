@@ -548,6 +548,34 @@ tasks:
     set_series_begin: yes
     disable: seen
 
+  discover-series-backfill:
+    manual: yes
+    template:
+      - series
+      - torrents
+      - transmission-series
+      - reject
+      - series-download-notify
+    discover:
+      release_estimations: loose
+      what:
+        - next_series_episodes:
+            from_start: yes
+            backfill: yes
+      from:
+        - rarbg:
+            category: x264
+      limit: 6
+    interval: 12 hours
+    max_reruns: 10
+    list_match:
+      from:
+        - entry_list: existing episodes
+      action: reject
+    content_size:
+      max: 900
+      min: 20
+
 schedules:
   - tasks:
     - versioncheck
