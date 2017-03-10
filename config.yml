@@ -52,6 +52,8 @@ templates:
       - rss:
           url: https://eztv.yt/ezrss.xml
       - rss:
+          url: http://extratorrent.cc/rss.xml?type=popular&cid=8
+      - rss:
           url: '{? showrss.url ?}'
 
   rss-movies:
@@ -64,7 +66,11 @@ templates:
           url: http://extratorrent.cc/rss.xml?cid=4&type=last
       - rss:
           url: https://www.limetorrents.cc/rss/16/
-  
+      - rss:
+          url: https://yts.ag/rss
+      - rss:
+          url: http://extratorrent.cc/rss.xml?type=popular&cid=4
+
   series:
     metainfo_series: yes
     thetvdb_lookup: yes
