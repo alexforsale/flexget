@@ -411,7 +411,7 @@ tasks:
       - seen
       - seen_info_hash
     metainfo_series: yes
-    thetvdb_lookup: yes
+    trakt_lookup: yes
     filesystem:
       path: '{? staging.series ?}'
       recursive: yes
@@ -420,22 +420,20 @@ tasks:
     accept_all: yes
     seen: local
     require_field:
-      - series_name
-      - tvdb_ep_id
-      - tvdb_ep_name
+      - trakt_series_name
+      - trakt_season
+      - trakt_ep_name
     copy:
-      to: "{? folder.series ?}/{{tvdb_series_name}}/Season {{tvdb_season}}"
+      to: "{? folder.series ?}/{{trakt_series_name}}/Season {{trakt_season}}"
       along:
         extensions:
           - srt
           - sub
         subdirs:
           - subs
+    exists: "{? folder.series ?}"
     content_size:
       min: 50
-    exec:
-      on_exit:
-        phase: find '{? staging.series ?}'/* -type d -empty -delete
     list_add:
       - subtitle_list:
           list: need_subs
