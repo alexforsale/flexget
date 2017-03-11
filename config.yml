@@ -380,7 +380,8 @@ tasks:
         - movie_list: random-movies
       from:
         - rarbg:
-            category: HDTV
+            category: [2, 5, 8, 9, 20, 15, 16]
+        - piratebay: yes
     require_field: imdb_url
     imdb_lookup: yes
     seen_movies: strict
@@ -620,7 +621,8 @@ tasks:
             backfill: yes
       from:
         - rarbg:
-            category: x264
+            category: HDTV
+        - piratebay: yes
       limit: 6
     interval: 12 hours
     max_reruns: 10
