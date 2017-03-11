@@ -128,6 +128,14 @@ templates:
       path: '{? staging.series ?}/{{tvdb_series_name|default(series_name)|pathscrub}}/'
       content_filename: "{{tvdb_series_name|default(series_name)|pathscrub}}-{{tvdb_ep_id|default(series_id)}}{% if tvdb_ep_name|default(False) %}-{{tvdb_ep_name|pathscrub}}{% endif %}{% if quality|default(False) %}-[{{quality}}]{% endif %}"
 
+  transmission-premieres:
+    transmission:
+      <<: *transmission-settings
+      main_file_only: yes
+      include_subs: yes
+      rename_like_files: yes
+      path: '{? staging.premieres ?}/{{tvdb_series_name|default(series_name)|pathscrub}}/'
+      content_filename: "{{tvdb_series_name|default(series_name)|pathscrub}}-{{tvdb_ep_id|default(series_id)}}{% if tvdb_ep_name|default(False) %}-{{tvdb_ep_name|pathscrub}}{% endif %}{% if quality|default(False) %}-[{{quality}}]{% endif %}"
 
   transmission-movies:
     transmission:
@@ -455,6 +463,41 @@ tasks:
             - en
             - id
 
+  copy-premieres:
+    disable:
+      - seen
+      - seen_info_hash
+    metainfo_series: yes
+    trakt_lookup: yes
+    filesystem:
+      path: '{? staging.premieres ?}'
+      recursive: yes
+      retrieve: files
+      regexp: '.*\.(avi|mkv|mp4)$'
+    accept_all: yes
+    seen: local
+    require_field:
+      - trakt_series_name
+      - trakt_season
+      - trakt_ep_name
+    copy:
+      to: "{? folder.premieres ?}/{{trakt_series_name}}/Season {{trakt_season}}"
+      along:
+        extensions:
+          - srt
+          - sub
+        subdirs:
+          - subs
+    exists: "{? folder.premieres ?}"
+    content_size:
+      min: 50
+    list_add:
+      - subtitle_list:
+          list: need_subs
+          languages:
+            - en
+            - id
+
   copy-movies:
     disable:
       - seen
@@ -589,6 +632,41 @@ tasks:
       max: 900
       min: 20
 
+  get-series-premieres:
+    seen: local
+    template:
+      - rss-tv
+      - torrents
+      - transmission-premieres
+      - reject
+      - series-download-notify
+    require_field:
+      - tvdb_id
+      - tvdb_genres
+      - tvdb_series_name
+      - tvdb_first_air_date
+    regexp:
+      reject:
+        - children: {from: tvdb_genres}
+        - family: {from: tvdb_genres}
+        - food: {from: tvdb_genres}
+        - game show: {from: tvdb_genres}
+        - home and garden: {from: tvdb_genres}
+        - musical: {from: tvdb_genres}
+        - reality: {from: tvdb_genres}
+        - romance: {from: tvdb_genres}
+        - soap: {from: tvdb_genres}
+        - special interest: {from: tvdb_genres}
+        - sport: {from: tvdb_genres}
+        - talk show: {from: tvdb_genres}
+        - travel: {from: tvdb_genres}
+    series_premiere:
+      timeframe: 4 hours
+      allow_teasers: no
+      allow_seasonless: yes
+    torrent_alive:
+      min_seeds: 10
+
 schedules:
   - tasks:
     - versioncheck
@@ -600,11 +678,13 @@ schedules:
     - fill-thetvdb-list
     - check-existing-movies
     - update-trakt-*
+    - get-series-premieres
     interval:
       days: 1
   - tasks:
     - copy-series
     - copy-movies
+    - copy-premieres
     interval:
       hours: 1
   - tasks:
