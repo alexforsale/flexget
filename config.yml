@@ -166,8 +166,6 @@ templates:
           {{title}}
           {%- endif -%}
         via:
-          - pushbullet:
-              api_key: '{? pusbullet.apikey ?}'
           - telegram:
               bot_token: '{? telegram.bot_token ?}'
               parse_mode: markdown
@@ -193,8 +191,6 @@ templates:
           {{title}}
           {%- endif -%}
         via:
-          - pushbullet:
-              api_key: '{? pusbullet.apikey ?}'
           - telegram:
               bot_token: '{? telegram.bot_token ?}'
               parse_mode: markdown
