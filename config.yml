@@ -312,6 +312,7 @@ tasks:
       - seen_info_hash
     metainfo_series: yes
     thetvdb_lookup: yes
+    trakt_lookup: yes
     parsing:
       series: guessit
     filesystem:
