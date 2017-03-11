@@ -81,6 +81,7 @@ templates:
           - hdtv <720p
         identified_by: ep
         propers: no
+        tracking: backfill
       from:
         filesystem:
           -  '{? staging.series ?}'
