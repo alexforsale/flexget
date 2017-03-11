@@ -146,11 +146,11 @@ templates:
       path: '{? staging.movies ?}/{{movie_name|pathscrub}}'
       content_filename: "{{tmdb_name|pathscrub}}-({{tmdb_year}}){% if quality|default(False) %}-[{{quality}}]{% endif %}"
 
-  series-download-notify:
+  series-notify:
     notify:
       entries:
         message: |+
-          *Download Started from task:
+          *Task started:
           *{{task}}
           {% if series_name is defined -%}
           *{{series_name}}* - {{series_id}} - {{quality|d('')}}
@@ -173,12 +173,11 @@ templates:
               recipients:
                 - username: '{? telegram.username ?}'
 
-  movies-download-notify:
+  movies-notify:
     notify:
       entries:
-        title: 'New Movie {{imdb_name}} - ({{imdb_year}})'
         message: |+
-          *Download Started from task:
+          *Task started:
           *{{task}}
           {% if imdb_name is defined -%}
           *{{imdb_name}}* - ({{imdb_year}})
@@ -267,7 +266,7 @@ tasks:
       - torrents
       - transmission-series
       - reject
-      - series-download-notify
+      - series-notify
     discover:
       what:
         - next_series_episodes: yes
@@ -284,7 +283,7 @@ tasks:
       - torrents
       - transmission-movies
       - reject
-      - movies-download-notify
+      - movies-notify
     discover:
       what:
         - trakt_list:
@@ -322,7 +321,7 @@ tasks:
     accept_all: yes
     template:
       - transmission-series
-      - series-download-notify
+      - series-notify
     exec:
       on_output:
         for_accepted: rm -rf "{{location}}"
@@ -339,7 +338,7 @@ tasks:
     accept_all: yes
     template:
       - transmission-movies
-      - movies-download-notify
+      - movies-notify
     exec:
       on_output:
         for_accepted: rm -rf "{{location}}"
@@ -393,7 +392,7 @@ tasks:
       - movies
       - transmission-movies
       - reject
-      - movies-download-notify
+      - movies-notify
     disable:
       - seen
       - seen_info_hash
@@ -424,7 +423,7 @@ tasks:
       - torrents
       - transmission-series
       - reject
-      - series-download-notify
+      - series-notify
     content_size:
       max: 900
       min: 20
@@ -458,6 +457,7 @@ tasks:
     disable:
       - seen
       - seen_info_hash
+    template: series-notify
     metainfo_series: yes
     trakt_lookup: yes
     filesystem:
@@ -493,6 +493,7 @@ tasks:
     disable:
       - seen
       - seen_info_hash
+    template: series-notify
     metainfo_series: yes
     trakt_lookup: yes
     filesystem:
@@ -528,6 +529,7 @@ tasks:
     disable:
       - seen
       - seen_info_hash
+    template: movies-notify
     imdb_lookup: yes
     filesystem:
       path: '{? staging.movies ?}'
@@ -637,7 +639,7 @@ tasks:
       - torrents
       - transmission-series
       - reject
-      - series-download-notify
+      - series-notify
     discover:
       release_estimations: loose
       what:
@@ -666,7 +668,7 @@ tasks:
       - torrents
       - transmission-premieres
       - reject
-      - series-download-notify
+      - series-notify
     require_field:
       - tvdb_id
       - tvdb_genres
