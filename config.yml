@@ -160,6 +160,8 @@ templates:
           *Aired:* {{tvdb_ep_air_date}}
           *Ep rate:* {{tvdb_ep_rating}}
           *Cast:* {{tvdb_actors}}
+          *plot:*
+          --------------------
           {{tvdb_ep_overview}}
           {% else -%}
           {{title}}
