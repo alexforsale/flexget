@@ -460,6 +460,7 @@ tasks:
     template: series-notify
     metainfo_series: yes
     trakt_lookup: yes
+    thetvdb_lookup: yes
     filesystem:
       path: '{? staging.series ?}'
       recursive: yes
