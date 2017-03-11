@@ -51,10 +51,16 @@ templates:
     inputs:
       - rss:
           url: https://eztv.yt/ezrss.xml
+          silent: yes
       - rss:
           url: http://extratorrent.cc/rss.xml?type=popular&cid=8
+          silent: yes
+      - rss:
+          url: http://www.torrentfunk.com/tv/rss.xml
+          silent: yes
       - rss:
           url: '{? showrss.url ?}'
+          silent: yes
 
   rss-movies:
     inputs:
