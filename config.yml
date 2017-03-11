@@ -155,9 +155,13 @@ templates:
           *{{task}}
           {% if series_name is defined -%}
           *{{series_name}}* - {{series_id}} - {{quality|d('')}}
-          *{{tvmaze_episode_name|d(tvdb_ep_name)|d('')}}*
-          [Image]({{tvmaze_series_original_image|replace("_", "%5F")}})
-          [Show page]({{tvmaze_series_url|replace("_", "%5F")}})
+          *{{trakt_ep_name|d(tvdb_ep_name)|d('')}}*
+          [Image]({{tvdb_ep_image|replace("_", "%5F")}})
+          [Show page]({{tvdb_url|replace("_", "%5F")}})
+          *Aired:* {{tvdb_ep_air_date}}
+          *Ep rate:* {{tvdb_ep_rating}}
+          *Cast:* {{tvdb_actors}}
+          {{tvdb_ep_overview}}
           {% else -%}
           {{title}}
           {%- endif -%}
