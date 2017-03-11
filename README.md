@@ -17,6 +17,7 @@ Saat ini fitur yang berjalan:
 * menghapus list torrent yang selesai didownload dari transmission
 * download subtitle secara otomatis untuk file yang didownload
 * notifikasi melalui pushbullet dan telegram
+* Download Series Premiere untuk TV Series baru
 
 Dependencies:
 --------
@@ -43,8 +44,8 @@ Note: jika menggunakan virtualenv untuk metode instalasi flexget-nya, perlu diin
 
 Pertama copy file secrets.yml.contoh ke file secrets.yml, lalu ubah isinya:
 
-Ada dua jenis folder yang digunakan, yang pertama, folder download yang berada di `'{? staging.series ?}'` dan `'{? staging.movies ?}'`, pastikan path di secrets.yml sesuai.
-folder kedua, merupakan lokasi akhir yang menjadi library. Sengaja dipisah agar kodi tidak membaca file - file selain media yang diperlukan, berada di `'{? folder.series ?}'` dan `'{? folder.movies ?}'`. Sedangkan untuk `'{? media.partition ?}'` adalah folder root dari kedua jenis folder sebelumnya (ini karena saya menggunakan partisi yang sama untuk kedua folder staging dan folder target-nya), flexget akan memantau free space dari partisi ini untuk berhenti seandainya rule free space tercapai di partisi ini.
+Ada dua jenis folder yang digunakan, yang pertama, folder download yang berada di `'{? staging.series ?}'`, `'{? staging.premieres ?}'` dan `'{? staging.movies ?}'`, pastikan path di secrets.yml sesuai.
+folder kedua, merupakan lokasi akhir yang menjadi library. Sengaja dipisah agar kodi tidak membaca file - file selain media yang diperlukan, berada di `'{? folder.series ?}'`, `'{? folder.premieres ?}'` dan `'{? folder.movies ?}'`. Sedangkan untuk `'{? media.partition ?}'` adalah folder root dari kedua jenis folder sebelumnya (ini karena saya menggunakan partisi yang sama untuk kedua folder staging dan folder target-nya), flexget akan memantau free space dari partisi ini untuk berhenti seandainya rule free space tercapai di partisi ini.
 
 ~~Login di [thetvdb](http://thetvdb.com/) atau register jika belum, masuk ke [account info](http://thetvdb.com/?tab=userinfo) masukkan username dan Account Identifier kedalam secrets.yml di bagian thetvdb. Lalu masuk ke search di site tersebut, cari series yang akan didownload dan jadikan favorit.~~ Kemungkinan thetvdb tidak akan digunakan lagi.
 
@@ -68,22 +69,28 @@ Tidak ada setting tambahan untuk kodi, cukup masukkan folder tujuan sebagai libr
 
 Untuk melihat isi dari transmission, cukup buka browser dan masuk ke http://localhost:9091/ dengan user:pass transmission:transmission
 
-Note untuk folder `'{? staging.series ?}'` dan `'{? staging.movies ?}'` perlu diubah permissionnya.
+Note untuk folder `'{? staging.series ?}'`, `'{? staging.premieres ?}'` dan `'{? staging.movies ?}'` perlu diubah permissionnya.
 
 
 	sudo usermod -a -G debian-transmission (debian/ubuntu) $USER
 
 	sudo usermod -a -G transmission (distro lainnya) $USER
 
-	sudo chgrp debian-transmission <folder staging series-nya>
+	sudo chgrp debian-transmission <folder staging series-nya>   # untuk debian/ubuntu
 
-	sudo chgrp debian-transmission <folder staging series-nya>  # untuk debian/ubuntu
+	sudo chgrp transmission <folder staging series-nya>  # untuk distro lain
 	
-	sudo chgrp debian-transmission <folder staging series-nya>
+	sudo chgrp debian-transmission <folder staging movies-nya>  # untuk debian/ubuntu
 
-	sudo chgrp debian-transmission <folder staging movies-nya>  # untuk distro lain
+	sudo chgrp transmission <folder staging movies-nya>  # untuk distro lain
+
+	sudo chgrp debian-transmission <folder staging premieres-nya> # untuk debian/ubuntu
+
+	sudo chgrp transmission <folder staging premieres-nya>  # untuk distro lain
 
 	sudo chmod 770 <folder staging series-nya>
+
+	sudo chmod 770 <folder staging premieres-nya>
 
 	sudo chmod 770 <folder staging movies-nya>
 
