@@ -149,7 +149,6 @@ templates:
   series-download-notify:
     notify:
       entries:
-        title: 'New Episode {{series_name}}* - {{series_id}} - {{quality|d('')}}'
         message: |+
           *Download Started from task:
           *{{task}}

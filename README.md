@@ -16,7 +16,7 @@ Saat ini fitur yang berjalan:
 * memindahkan torrent yang selesai didownload ke folder target
 * menghapus list torrent yang selesai didownload dari transmission
 * download subtitle secara otomatis untuk file yang didownload
-* notifikasi melalui pushbullet dan telegram
+* notifikasi melalui ~~pushbullet~~ dan telegram
 * Download Series Premiere untuk TV Series baru
 
 Dependencies:
