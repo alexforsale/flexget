@@ -567,6 +567,10 @@ tasks:
       finished_for: 1 days
       min_ratio: 1
       delete_files: yes
+      directories:
+        -  '{? staging.premieres ?}'
+        -  '{? staging.series ?}'
+        -  '{? staging.movies ?}'
     disable: details
 
   fill-thetvdb-list:
