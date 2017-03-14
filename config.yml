@@ -333,7 +333,7 @@ tasks:
     imdb_lookup: yes
     trakt_lookup: yes
     filesystem:
-      path: '{? staging.series ?}'
+      path: '{? staging.movies ?}'
       mask: '*.torrent'
     accept_all: yes
     template:
