@@ -679,6 +679,8 @@ tasks:
       - tvdb_genres
       - tvdb_series_name
       - tvdb_first_air_date
+    thetvdb_lookup: yes
+    trakt_lookup: yes
     regexp:
       reject:
         - children: {from: tvdb_genres}
