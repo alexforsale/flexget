@@ -722,7 +722,7 @@ schedules:
     - copy-movies
     - copy-premieres
     interval:
-      minures: 15
+      minutes: 15
   - tasks:
     - clean-up-transmission
     - series-trakt-set-begin
