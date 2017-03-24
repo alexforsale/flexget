@@ -457,6 +457,7 @@ tasks:
     disable:
       - seen
       - seen_info_hash
+      - retry_failed
     template: series-notify
     metainfo_series: yes
     trakt_lookup: yes
@@ -703,6 +704,32 @@ tasks:
     torrent_alive:
       min_seeds: 10
 
+  move-premieres-listed:
+    thetvdb_lookup: yes
+    trakt_lookup: yes
+    metainfo_series: yes
+    filesystem:
+      path: '{? folder.premieres ?}'
+      recursive: yes
+      retrieve: files
+      regexp: '.*\.(avi|mkv|mp4)$'
+    list_match:
+      from:
+        - trakt_list:
+            username: '{? trakt.user ?}'
+            account: '{? trakt.account ?}'
+            list: series-list
+            type: shows
+      action: accept
+    move:
+      to: "{? folder.series ?}/{{trakt_series_name}}/Season {{trakt_season}}"
+      along:
+        extensions:
+          - sub
+          - srt
+        subdirs:
+          - Subs
+          
 schedules:
   - tasks:
     - versioncheck
