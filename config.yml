@@ -542,7 +542,7 @@ tasks:
     seen: local
     require_field: imdb_name
     copy:
-      to: "{? folder.movies ?}/{{ imdb_name }}"
+      to: "{? folder.movies ?}/{{ imdb_mpaa_rating }}/{{ imdb_name }}"
       along:
         extensions:
           - srt
