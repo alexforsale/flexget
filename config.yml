@@ -92,6 +92,9 @@ templates:
         filesystem:
           -  '{? staging.series ?}'
           -  '{? folder.series ?}'
+        thetvdb_list:
+          username: '{? thetvdb.user ?}'
+          account_id: '{? thetvdb.id ?}'
     exists_series:
       path:
         -  '{? staging.series ?}/'
