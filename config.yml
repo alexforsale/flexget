@@ -157,8 +157,13 @@ templates:
           *{{task}}
           {% if series_name is defined -%}
           *{{series_name}}* - {{series_id}} - {{quality|d('')}}
+          {% else -%}
+          {{title}}
+          {%- endif -%}
           *{{trakt_ep_name|d(tvdb_ep_name)|d('')}}*
+          {% if tvdb_ep_image is defined -%}
           [Image]({{tvdb_ep_image|replace("_", "%5F")}})
+          {%- endif -%}
           [Show page]({{tvdb_url|replace("_", "%5F")}})
           *Aired:* {{tvdb_ep_air_date}}
           *Ep rate:* {{tvdb_ep_rating}}
@@ -166,9 +171,6 @@ templates:
           *plot:*
           --------------------
           {{tvdb_ep_overview}}
-          {% else -%}
-          {{title}}
-          {%- endif -%}
         via:
           - telegram:
               bot_token: '{? telegram.bot_token ?}'
