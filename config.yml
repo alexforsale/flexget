@@ -164,13 +164,23 @@ templates:
           {% if tvdb_ep_image is defined -%}
           [Image]({{tvdb_ep_image|replace("_", "%5F")}})
           {%- endif -%}
+          {% if tvdb_url is defined -%}
           [Show page]({{tvdb_url|replace("_", "%5F")}})
+          {%- endif -%}
+          {% if tvdb_ep_air_date is defined -%}
           *Aired:* {{tvdb_ep_air_date}}
+          {%- endif -%}
+          {% if tvdb_ep_rating is defined -%}
           *Ep rate:* {{tvdb_ep_rating}}
+          {%- endif -%}
+          {% if tvdb_actors is defined -%}
           *Cast:* {{tvdb_actors}}
+          {%- endif -%}
+          {% if tvdb_ep_overview is defined -%}
           *plot:*
           --------------------
           {{tvdb_ep_overview}}
+          {%- endif -%}
         via:
           - telegram:
               bot_token: '{? telegram.bot_token ?}'
