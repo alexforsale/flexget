@@ -491,7 +491,7 @@ tasks:
       - trakt_season
       - trakt_ep_name
     copy:
-      to: "{? folder.series ?}/{{trakt_series_name}}/Season {{trakt_season}}"
+      to: "{? folder.series ?}/{{tvdb_series_name}}/Season {{trakt_season}}"
       along:
         extensions:
           - srt
