@@ -89,12 +89,12 @@ templates:
         propers: no
         tracking: backfill
       from:
-        filesystem:
-          -  '{? staging.series ?}'
-          -  '{? folder.series ?}'
         thetvdb_list:
           username: '{? thetvdb.user ?}'
           account_id: '{? thetvdb.id ?}'
+        filesystem:
+          -  '{? staging.series ?}'
+          -  '{? folder.series ?}'
     exists_series:
       path:
         -  '{? staging.series ?}/'
