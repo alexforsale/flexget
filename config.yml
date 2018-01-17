@@ -50,7 +50,7 @@ templates:
   rss-tv:
     inputs:
       - rss:
-          url: https://eztv.yt/ezrss.xml
+          url: https://eztv.unblocked.vc/ezrss.xml
           silent: yes
       - rss:
           url: http://www.torrentfunk.com/tv/rss.xml
