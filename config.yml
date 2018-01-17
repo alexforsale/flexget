@@ -53,9 +53,6 @@ templates:
           url: https://eztv.yt/ezrss.xml
           silent: yes
       - rss:
-          url: http://extratorrent.cc/rss.xml?type=popular&cid=8
-          silent: yes
-      - rss:
           url: http://www.torrentfunk.com/tv/rss.xml
           silent: yes
       - rss:
@@ -69,13 +66,9 @@ templates:
       - rss:
           url: https://rarbg.to/rssdd.php?category=movies
       - rss:
-          url: http://extratorrent.cc/rss.xml?cid=4&type=last
-      - rss:
           url: https://www.limetorrents.cc/rss/16/
       - rss:
           url: https://yts.am/rss
-      - rss:
-          url: http://extratorrent.cc/rss.xml?type=popular&cid=4
 
   series:
     metainfo_series: yes
