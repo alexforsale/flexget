@@ -73,7 +73,7 @@ templates:
       - rss:
           url: https://www.limetorrents.cc/rss/16/
       - rss:
-          url: https://yts.ag/rss
+          url: https://yts.am/rss
       - rss:
           url: http://extratorrent.cc/rss.xml?type=popular&cid=4
 
