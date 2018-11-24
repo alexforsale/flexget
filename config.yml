@@ -83,8 +83,9 @@ templates:
         tracking: backfill
       from:
         thetvdb_list:
-          username: '{? thetvdb.user ?}'
-          account_id: '{? thetvdb.id ?}'
+          username: '{? thetvdb.username ?}'
+          account_id: '{? thetvdb.account_id ?}'
+          api_key: '{? thetvdb.api_key ?}'
         filesystem:
           -  '{? staging.series ?}'
           -  '{? folder.series ?}'
@@ -590,8 +591,9 @@ tasks:
     thetvdb_lookup: yes
     list_add:
       - thetvdb_list:
-          username: '{? thetvdb.user ?}'
-          account_id: '{? thetvdb.id ?}'
+          username: '{? thetvdb.username ?}'
+          account_id: '{? thetvdb.account_id ?}'
+          api_key: '{? thetvdb.api_key ?}'
     seen: local
 
   update-trakt-episodes:
