@@ -151,3 +151,8 @@ Jika ingin menggunakan proxy, masukkan url proxy di secrets.yml, dan uncomment b
 #    proxy:
 #      http: '{? proxy.http ?}'
 ```
+
+Konfigurasi Proxy
+-----
+
+Untuk mudahnya, gunakan [Tor](https://www.torproject.org/) dan set proxy http ke 127.0.0.1:8118, cek web mereka untuk informasi lengkapnya.
