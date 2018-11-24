@@ -14,8 +14,8 @@ templates:
     pathscrub: windows
     no_entries_ok: yes
 
-#    proxy:
-#      http: '{? proxy.http ?}'
+    proxy:
+      http: '{? proxy.http ?}'
 
   reject:
     regexp:
