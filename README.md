@@ -135,6 +135,10 @@ berjalan dengan lancar, bisa di test dengan perintah `flexget --test execute`.
 Jika ingin check task tertentu saja, syntax-nya `flexget --test execute --task
 'namatasknya'`.
 
+#### Systemd system unit
+
+Konfigurasi global cek [tutorial](https://flexget.com/InstallWizard/Linux/AutoStart) ini.
+
 ### Manual Backfill Series
 
 Jika ingin mendownload episode - episode lama, sebelumnya pastikan terlebih dahulu di folder series sudah terisi oleh minimal satu episode dari setiap show yang ingin didownload (berarti flexget telah berjalan sebelumnya dan sudah mencatat semua series yang tersedia di folder). Jalankan perintah ini diterminal `flexget execute --task discover-series-backfill`. Perintah ini akan berjalan sangat lama, terlebih jika banyak series yang ada di folder media. Disarankan matikan dulu scheduler flexget dengan perintah `flexget daemon stop` dan check untuk memastikan tidak ada daemon yang berjalan dengan perintah `flexget daemon status` agar tidak terjadi penumpukan schedule. Untuk saat ini baru rarbg yang digunakan untuk search plugin-nya.
