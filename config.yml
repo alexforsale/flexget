@@ -50,10 +50,13 @@ templates:
   rss-tv:
     inputs:
       - rss:
-          url: https://eztv.unblocked.vc/ezrss.xml
+          url: https://eztv.io/ezrss.xml
           silent: yes
       - rss:
           url: http://www.torrentfunk.com/tv/rss.xml
+          silent: yes
+      - rss:
+          url: https://rarbg.to/rssdd.php?category=tvseries
           silent: yes
       - rss:
           url: '{? showrss.url ?}'
