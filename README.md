@@ -156,3 +156,11 @@ Konfigurasi Proxy
 -----
 
 Untuk mudahnya, gunakan [Tor](https://www.torproject.org/) dan set proxy http ke 127.0.0.1:8118, cek web mereka untuk informasi lengkapnya.
+
+Package aur untuk archlinux
+-----
+
+Arch User Repositories ([AUR](https://aur.archlinux.org)) sudah menyediakan package - package yang dibutuhkan, cukup instalasi melalui aur helper atau kompilasi langsung.
+
+- flexget: https://aur.archlinux.org/packages/flexget/
+- transmissionrpc: https://aur.archlinux.org/packages/python-transmissionrpc/
