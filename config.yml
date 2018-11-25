@@ -56,7 +56,7 @@ templates:
           url: http://www.torrentfunk.com/tv/rss.xml
           silent: yes
       - rss:
-          url: https://rarbg.to/rssdd.php?category=tvseries
+          url: https://rarbg.to/rssdd.php?category=18
           silent: yes
       - rss:
           url: '{? showrss.url ?}'
