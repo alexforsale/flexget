@@ -328,7 +328,7 @@ tasks:
     thetvdb_lookup: yes
     trakt_lookup: yes
     parsing:
-      series: guessit
+      series: internal
     filesystem:
       path: '{? staging.series ?}'
       mask: '*.torrent'
