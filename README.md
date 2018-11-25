@@ -155,7 +155,7 @@ Jika ingin menggunakan proxy, masukkan url proxy di secrets.yml, dan uncomment b
 Konfigurasi Proxy
 -----
 
-Untuk mudahnya, gunakan [Tor](https://www.torproject.org/) dan set proxy http ke 127.0.0.1:8118, cek web mereka untuk informasi lengkapnya.
+Untuk mudahnya, gunakan [Tor](https://www.torproject.org/) dan Polipo, set proxy http ke 127.0.0.1:8123. Cek [blog ini](https://www.marcus-povey.co.uk/2016/03/24/using-tor-as-a-http-proxy/) untuk info lengkapnya.
 
 Package aur untuk archlinux
 -----
