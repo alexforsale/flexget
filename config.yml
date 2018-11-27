@@ -404,11 +404,12 @@ tasks:
     subliminal:
       languages:
         - en
-      alternatives:
         - id
       providers: 
         - opensubtitles
         - podnapisi
+        - addic7ed
+        - tvsubtitles
       single: no
       hearing_impaired: yes
       exact_match: no
