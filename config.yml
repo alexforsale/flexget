@@ -56,7 +56,7 @@ templates:
           url: http://www.torrentfunk.com/tv/rss.xml
           silent: yes
       - rss:
-          url: https://rarbg.to/rssdd.php?category=18
+          url: http://extratorrent.cc/rss.xml?type=popular&cid=8
           silent: yes
       - rss:
           url: '{? showrss.url ?}'
@@ -70,7 +70,7 @@ templates:
       - rss:
           url: https://kat.am/movies/?rss=1
       - rss:
-          url: https://rarbg.to/rssdd.php?category=movies
+          url: http://extratorrent.cc/rss.xml?type=popular&cid=4
       - rss:
           url: https://www.limetorrents.cc/rss/16/
       - rss:
