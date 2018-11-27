@@ -233,6 +233,10 @@ tasks:
       from:
         - rarbg:
             category: x264
+        - piratebay:
+            category: tv
+            url: https://thepiratebay9.org
+        newtorrents: yes
     content_size:
       max: 900
       min: 20
