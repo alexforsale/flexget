@@ -155,7 +155,9 @@ Jika ingin menggunakan proxy, masukkan url proxy di secrets.yml, dan uncomment b
 Konfigurasi Proxy
 -----
 
-Untuk mudahnya, gunakan [Tor](https://www.torproject.org/) dan Polipo, set proxy http ke 127.0.0.1:8123. Cek [blog ini](https://www.marcus-povey.co.uk/2016/03/24/using-tor-as-a-http-proxy/) untuk info lengkapnya. Dan pastikan cek penggunaan proxy di commandline dengan perintah `http_proxy=$url-proxy curl $url-rss-feed` dengan $url-proxy adalah url proxy yang digunakan (misal seperti di contoh http://127.0.0.1:8123 atau http::/localhost:8123), dan url-rss-feed adalah url dari rss feed yang dipakai didalam file `config.yml`
+Untuk mudahnya, gunakan [Tor](https://www.torproject.org/) dan Polipo, set proxy http ke 127.0.0.1:8123. Cek [blog ini](https://www.marcus-povey.co.uk/2016/03/24/using-tor-as-a-http-proxy/) untuk info lengkapnya. Dan pastikan cek penggunaan proxy di commandline dengan perintah `http_proxy=$url-proxy curl $url-rss-feed` dengan $url-proxy adalah url proxy yang digunakan (misal seperti di contoh http://127.0.0.1:8123 atau http::/localhost:8123), dan url-rss-feed adalah url dari rss feed yang dipakai didalam file `config.yml`.
+
+Pilihan lain untuk menggunakan Tor adalah dengan mengawali setiap perintah flexget dengan torsocks, misalnya `torsocks flexget execute`. Tapi pastikan baris proxy di config.yml dicomment terlebih dahulu.
 
 Package aur untuk archlinux
 -----
