@@ -139,6 +139,41 @@ Jika ingin check task tertentu saja, syntax-nya `flexget --test execute --task
 
 Konfigurasi global cek [tutorial](https://flexget.com/InstallWizard/Linux/AutoStart) ini.
 
+- install flexget secara global dengan perintah `sudo pip install flexget`.
+  Perintah ini akan menginstall flexget di */usr/bin/*.
+- Pindahkan isi repository ini ke */etc/flexget*
+- Buat unit file flexget dengan nama */usr/lib/systemd/system/flexget.service* dengan isi:
+```
+[Unit]
+Description=Flexget Daemon
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=daemon
+Group=daemon
+UMask=000
+WorkingDirectory=/etc/flexget
+ExecStart=/usr/bin/flexget --logfile /var/log/flexget/flexget.log daemon start
+ExecStop=/usr/bin/flexget --logfile /var/log/flexget/flexget.log daemon stop
+ExecReload=/usr/bin/flexget --logfile /var/log/flexget/flexget.log daemon reload
+
+[Install]
+WantedBy=multi-user.target
+```
+  Pastikan `NetworkManager-wait-online.service` sudah dienable.
+- set permission untuk */etc/flexget* dan user daemon
+```
+sudo mkdir -pv /var/log/flexget
+sudo chown daemon:daemon /var/log/flexget
+sudo chown daemon:daemon /etc/flexget -Rv
+sudo chmod 777 /etc/flexget -Rv
+```
+- double-check konfigurasi flexget.
+- authenticate trakt: `sudo -u daemon flexget -c /etc/flexget/config.yml trakt auth namausertrakt`
+- jika sudah sesuai, reload daemon systemd `systemctl daemon-reload` dan enable dan jalankan service-nya dengan perintah `systemctl enable --now flexget-service` 
+
 ### Manual Backfill Series
 
 Jika ingin mendownload episode - episode lama, sebelumnya pastikan terlebih dahulu di folder series sudah terisi oleh minimal satu episode dari setiap show yang ingin didownload (berarti flexget telah berjalan sebelumnya dan sudah mencatat semua series yang tersedia di folder). Jalankan perintah ini diterminal `flexget execute --task discover-series-backfill`. Perintah ini akan berjalan sangat lama, terlebih jika banyak series yang ada di folder media. Disarankan matikan dulu scheduler flexget dengan perintah `flexget daemon stop` dan check untuk memastikan tidak ada daemon yang berjalan dengan perintah `flexget daemon status` agar tidak terjadi penumpukan schedule. Untuk saat ini baru rarbg yang digunakan untuk search plugin-nya.
