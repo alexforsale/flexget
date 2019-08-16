@@ -23,7 +23,7 @@ Dependencies:
 --------
 
 * [flexget](http://flexget.com/), untuk archlinux bisa gunakan package `flexget-git` dari [AUR](https://aur.archlinux.org/packages/flexget-git)
-* transmission-daemon
+* transmission-cli
 * transmissionrpc (pip install Transmissionrpc), atau untuk archlinux, dengan package AUR [python-transmissionrpc](https://aur.archlinux.org/packages/python-transmissionrpc)
 * Linux (jelas)
 * [kodi](https://kodi.tv/)
@@ -95,6 +95,7 @@ Note untuk folder `'{? staging.series ?}'`, `'{? staging.premieres ?}'` dan `'{?
 	sudo chmod 770 <folder staging movies-nya>
 
 
+Note: perintah diatas (untuk set permission), hanya jika menggunakan flexget secara global.
 stop service daemonnya
 
 	sudo service transmission-daemon stop # debian/ubuntu
