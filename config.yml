@@ -14,8 +14,8 @@ templates:
     pathscrub: windows
     no_entries_ok: yes
 
-#    proxy:
-#      http: '{? proxy.http ?}'
+    proxy:
+      http: '{? proxy.http ?}'
 
   reject:
     regexp:
@@ -525,19 +525,13 @@ tasks:
             - id
 
   clean-up-transmission:
-    clean_transmission:
-      host: localhost
-      port: 9091
-      username: transmission
-      password: transmission
-      finished_for: 1 days
-      min_ratio: 1
-      delete_files: yes
-      directories:
-        -  '{? staging.premieres ?}'
-        -  '{? staging.series ?}'
-        -  '{? staging.movies ?}'
-    disable: details
+    from_transmission: yes
+    disable: [seen, seen_info_hash]
+    if:
+      - transmission_progress == 100: accept
+      - transmission_date_done > now - timedelta(days=1): reject
+    transmission:
+      action: purge
 
   discover-series-backfill:
     manual: yes
