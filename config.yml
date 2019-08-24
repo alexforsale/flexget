@@ -498,6 +498,7 @@ tasks:
       - seen_info_hash
     template: movies-notify
     imdb_lookup: yes
+    trakt_lookup: yes
     filesystem:
       path: '{? staging.movies ?}'
       recursive: yes
@@ -505,9 +506,11 @@ tasks:
       regexp: '.*\.(avi|mkv|mp4)$'
     accept_all: yes
     seen: local
-    require_field: imdb_name
+    require_field:
+      - imdb_id
+      - trakt_movie_name
     copy:
-      to: "{? folder.movies ?}/{{ imdb_mpaa_rating }}/{{ imdb_name }}"
+      to: "{? folder.movies ?}/{{ imdb_mpaa_rating }}/{{ trakt_movie_name }}"
       along:
         extensions:
           - srt
