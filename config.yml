@@ -235,7 +235,7 @@ tasks:
             category: x264
         - piratebay:
             category: tv
-            url: https://thepiratebay9.org
+            url: https://piratebay-proxy.to
         - newtorrents: yes
     content_size:
       max: 900
@@ -258,7 +258,8 @@ tasks:
       from:
         - rarbg:
             category: [2, 5, 8, 9, 20, 15, 16]
-        - piratebay: yes
+        - piratebay:
+            url: https://piratebay-proxy.to
     list_match:
       from:
         - trakt_list:
@@ -369,7 +370,8 @@ tasks:
       from:
         - rarbg:
             category: [2, 5, 8, 9, 20, 15, 16]
-        - piratebay: yes
+        - piratebay:
+            url: https://piratebay-proxy.to
     require_field: imdb_url
     imdb_lookup: yes
     seen_movies: strict
@@ -553,7 +555,8 @@ tasks:
       from:
         - rarbg:
             category: HDTV
-        - piratebay: yes
+        - piratebay:
+            url: https://piratebay-proxy.to
       limit: 6
     interval: 12 hours
     max_reruns: 10
