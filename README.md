@@ -67,10 +67,12 @@ Dan setelahnya, flexget akan berjalan dibackground secara otomatis, ~~jika ingin
 
 Tidak ada setting tambahan untuk kodi, cukup masukkan folder tujuan sebagai library didalam kodi, nantinya akan discrape secara otomatis oleh kodi. Add-on yang cukup berguna mungkin subtitle, sudah ada di repo kodi, cukup diinstall saja.
 
-Untuk melihat isi dari transmission, cukup buka browser dan masuk ke http://localhost:9091/ dengan user:pass transmission:transmission
+Untuk melihat isi dari transmission, cukup buka browser dan masuk ke http://localhost:9091/ dengan user:pass transmission:transmission.
 
+Jadi untuk alur dari _permission flexget_ ini dibagi berdasarkan _process_, _flexget_ sendiri membutuhkan akses untuk setiap _folder_ yang ditentukan didalam _secrets.yml_. Dan untuk proses _download_ yang diserahkan kepada _transmission_ juga membutuhkan _permission_ berdasarkan dari _transmission_nya, seandainya _flexget_ dijalankan secara global (dengan user khusus), tentunya membutuhkan _permission_ yang berbeda dibanding dengan _flexget_ yang dijalankan menggunakan user biasa.
 Note untuk folder `'{? staging.series ?}'`, `'{? staging.premieres ?}'` dan `'{? staging.movies ?}'` perlu diubah permissionnya.
 
+Perintah ini jika menggunakan _transmission_ dengan user yang berbeda:
 
 	sudo usermod -a -G debian-transmission (debian/ubuntu) $USER
 
@@ -94,9 +96,8 @@ Note untuk folder `'{? staging.series ?}'`, `'{? staging.premieres ?}'` dan `'{?
 
 	sudo chmod 770 <folder staging movies-nya>
 
-
-Note: perintah diatas (untuk set permission), hanya jika menggunakan flexget secara global.
-stop service daemonnya
+Jika ingin menggunakan _transmission_ dengan user yang sama, pastikan saja _permission_ disetiap folder _staging_-nya dapat diakses oleh user yang dipakai.
+stop service daemonnya:
 
 	sudo service transmission-daemon stop # debian/ubuntu
 
@@ -174,6 +175,8 @@ sudo chmod 777 /etc/flexget -Rv
 - double-check konfigurasi flexget.
 - authenticate trakt: `sudo -u daemon flexget -c /etc/flexget/config.yml trakt auth namausertrakt`
 - jika sudah sesuai, reload daemon systemd `systemctl daemon-reload` dan enable dan jalankan service-nya dengan perintah `systemctl enable --now flexget-service` 
+
+Tentunya _scheduling_ untuk _transmission-daemon_ juga perlu disesuaikan dengan _scheduling_ flexget yang digunakan. Jika menggunakan user khusus, pastikan _transmission-daemon_ juga dijalankan dengan user yang sesuai.
 
 ### Manual Backfill Series
 
