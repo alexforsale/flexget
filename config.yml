@@ -45,7 +45,6 @@ templates:
     torrent_alive:
       min_seeds: 10
       reject_for: 30 minutes
-    magnets: no
 
   rss-tv:
     inputs:
@@ -117,6 +116,7 @@ templates:
       password: transmission
       ratio: 1
       include_subs: yes
+      magnetization_timeout: 1
     retry_failed:
       retry_time: 10 seconds
       retry_time_multiplier: 1
