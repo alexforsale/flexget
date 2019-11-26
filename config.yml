@@ -626,7 +626,15 @@ tasks:
           - srt
         subdirs:
           - Subs
-          
+
+  series-trakt-set-begin:
+    next_trakt_episodes:
+      account: '{? trakt.user ?}'
+      context: collected
+      list: series-list
+    accept_all: yes
+    set_series_begin: yes
+
 schedules:
   - tasks:
     - versioncheck
