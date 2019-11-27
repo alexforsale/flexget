@@ -537,12 +537,6 @@ tasks:
       - transmission_date_done > now - timedelta(days=1): reject
     transmission:
       action: purge
-    regexp:
-      reject_excluding:
-        - "{? folder.movies ?}"
-          from: transmission_downloadDir
-        - "{? folder.series ?}"
-          from: transmission_downloadDir
 
   discover-series-backfill:
     manual: yes
