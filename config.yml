@@ -231,7 +231,7 @@ tasks:
               - x264 720p
               - HDTV
         - piratebay:
-            url: https://piratebay-proxy.to
+            url: '{? tpb.url ?}'
         - newtorrents: yes
     content_size:
       max: 900
@@ -257,7 +257,7 @@ tasks:
               - x264 720p
               - HDTV
         - piratebay:
-            url: https://piratebay-proxy.to
+            url: '{? tpb.url ?}'
     list_match:
       from:
         - trakt_list:
@@ -371,7 +371,7 @@ tasks:
               - x264 720p
               - HDTV
         - piratebay:
-            url: https://piratebay-proxy.to
+            url: '{? tpb.url ?}'
     require_field: imdb_url
     imdb_lookup: yes
     seen_movies: strict
@@ -558,7 +558,7 @@ tasks:
               - x264 720p
               - HDTV
         - piratebay:
-            url: https://piratebay-proxy.to
+            url: '{? tpb.url ?}'
       limit: 6
     interval: 12 hours
     max_reruns: 10
