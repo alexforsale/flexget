@@ -14,8 +14,8 @@ templates:
     pathscrub: windows
     no_entries_ok: yes
 
-    proxy:
-      http: '{? proxy.http ?}'
+#    proxy:
+#      http: '{? proxy.http ?}'
 
   reject:
     regexp:
@@ -49,7 +49,7 @@ templates:
   rss-tv:
     inputs:
       - rss:
-          url: https://eztv.io/ezrss.xml
+          url: '{? eztv.url ?}'
           silent: yes
       - rss:
           url: http://www.torrentfunk.com/tv/rss.xml
