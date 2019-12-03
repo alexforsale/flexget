@@ -52,12 +52,6 @@ templates:
           url: '{? eztv.url ?}'
           silent: yes
       - rss:
-          url: http://www.torrentfunk.com/tv/rss.xml
-          silent: yes
-      - rss:
-          url: http://extratorrent.cc/rss.xml?type=popular&cid=8
-          silent: yes
-      - rss:
           url: '{? showrss.url ?}'
           silent: yes
       - rss:
@@ -67,13 +61,9 @@ templates:
   rss-movies:
     inputs:
       - rss:
-          url: https://kat.am/movies/?rss=1
+          url: '{? kat.url ?}'
       - rss:
-          url: http://extratorrent.cc/rss.xml?type=popular&cid=4
-      - rss:
-          url: https://www.limetorrents.cc/rss/16/
-      - rss:
-          url: https://yts.am/rss
+          url: '{? yts.url ?}'
 
   series:
     metainfo_series: yes
