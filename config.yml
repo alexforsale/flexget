@@ -232,9 +232,10 @@ tasks:
         - next_series_episodes: yes
       from:
         - rarbg:
-            category: x264
+            category:
+              - x264 720p
+              - HDTV
         - piratebay:
-            category: tv
             url: https://piratebay-proxy.to
         - newtorrents: yes
     content_size:
@@ -257,7 +258,9 @@ tasks:
             type: movies
       from:
         - rarbg:
-            category: [2, 5, 8, 9, 20, 15, 16]
+            category:
+              - x264 720p
+              - HDTV
         - piratebay:
             url: https://piratebay-proxy.to
     list_match:
@@ -369,7 +372,9 @@ tasks:
         - movie_list: random-movies
       from:
         - rarbg:
-            category: [2, 5, 8, 9, 20, 15, 16]
+            category:
+              - x264 720p
+              - HDTV
         - piratebay:
             url: https://piratebay-proxy.to
     require_field: imdb_url
@@ -554,7 +559,9 @@ tasks:
             backfill: yes
       from:
         - rarbg:
-            category: HDTV
+            category:
+              - x264 720p
+              - HDTV
         - piratebay:
             url: https://piratebay-proxy.to
       limit: 6
