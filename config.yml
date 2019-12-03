@@ -215,11 +215,6 @@ templates:
                 - username: '{? telegram.username ?}'
 
 tasks:
-  versioncheck:
-    version_checker:
-      check_for_dev_version: yes
-      interval: 1
-
   discover-series:
     template:
       - series
@@ -644,7 +639,6 @@ tasks:
 
 schedules:
   - tasks:
-    - versioncheck
     - discover-movies
     - random-movies-listing
     - random-movies-download
