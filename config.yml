@@ -61,7 +61,7 @@ templates:
           url: '{? showrss.url ?}'
           silent: yes
       - rss:
-          url: '{? zoogle.url ?}'
+          url: '{? zooqle.url ?}'
           silent: yes
 
   rss-movies:
