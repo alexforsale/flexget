@@ -55,7 +55,7 @@ templates:
           url: '{? showrss.url ?}'
           silent: yes
       - rss:
-          url: '{? zoogle.url ?}'
+          url: '{? zooqle.url ?}'
           silent: yes
 
   rss-movies:
@@ -251,6 +251,7 @@ tasks:
               - HDTV
         - piratebay:
             url: '{? tpb.url ?}'
+        - yts: yes
     list_match:
       from:
         - trakt_list:
@@ -367,6 +368,7 @@ tasks:
               - HDTV
         - piratebay:
             url: '{? tpb.url ?}'
+        - yts: yes
     require_field: imdb_url
     imdb_lookup: yes
     seen_movies: strict
@@ -625,13 +627,38 @@ tasks:
         subdirs:
           - Subs
 
-  series-trakt-set-begin:
+  get-series-nextep:
+    disable: [seen, seen_info_hash]
+    list_clear:
+      what:
+        - entry_list: trakt-series-begin
     next_trakt_episodes:
-      account: '{? trakt.user ?}'
-      context: collected
-      list: '{? trakt.list.series ?}'
+      account: "{? trakt.account ?}"
+      list: "{? trakt.list.series ?}"
+      context: watched
+      position: next
+    accept_all: yes
+    list_add:
+      - entry_list: trakt-series-begin
+
+  set-series-nextep:
+    disable: [seen, seen_info_hash]
+    entry_list: trakt-series-begin
     accept_all: yes
     set_series_begin: yes
+
+  fill-series-list:
+    disable: [seen, seen_info_hash]
+    list_clear:
+      what:
+        - entry_list: trakt-series
+    trakt_list:
+      account: "{? trakt.account ?}"
+      list: "{? trakt.list.series ?}"
+      type: episodes
+    accept_all: yes
+    list_add:
+      - entry_list: trakt-series
 
 schedules:
   - tasks:
@@ -645,11 +672,13 @@ schedules:
     - copy-series
     - copy-movies
     - copy-premieres
+    - get-series-nextep
+    - set-series-nextep
+    - fill-series-list
     interval:
       minutes: 15
   - tasks:
     - clean-up-transmission
-    - series-trakt-set-begin
     interval:
       hours: 3
   - tasks:
