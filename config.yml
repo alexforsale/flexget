@@ -238,6 +238,8 @@ tasks:
       - reject
       - movies-notify
     discover:
+      release_estimations:
+        optimistic: 30 days
       what:
         - trakt_list:
             username: '{? trakt.user ?}'
@@ -259,6 +261,8 @@ tasks:
             account: '{? trakt.account ?}'
             list: '{? trakt.list.movies ?}'
             type: movies
+      remove_on_match: yes
+
     content_size:
       max: 4000
       min: 20
@@ -538,6 +542,7 @@ tasks:
 
   discover-series-backfill:
     manual: yes
+    limit_new: 2
     template:
       - series
       - torrents
