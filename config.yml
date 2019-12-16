@@ -55,7 +55,7 @@ templates:
           url: '{? showrss.url ?}'
           silent: yes
       - rss:
-          url: '{? zooqle.url ?}'
+          url: '{? zoogle.url ?}'
           silent: yes
 
   rss-movies:
@@ -72,15 +72,16 @@ templates:
     configure_series:
       settings:
         qualities:
-          - hdtv <720p
+          - hdtv <480p
         identified_by: ep
         propers: no
         tracking: backfill
       from:
-        thetvdb_list:
-          username: '{? thetvdb.username ?}'
-          account_id: '{? thetvdb.account_id ?}'
-          api_key: '{? thetvdb.api_key ?}'
+        trakt_list:
+          username: '{? trakt.user ?}'
+          account: '{? trakt.account ?}'
+          list: '{? trakt.list.series ?}'
+          type: episodes
         filesystem:
           -  '{? staging.series ?}'
           -  '{? folder.series ?}'
@@ -212,6 +213,7 @@ tasks:
       - transmission-series
       - reject
       - series-notify
+    limit_new: 2
     discover:
       what:
         - next_series_episodes: yes
@@ -224,10 +226,11 @@ tasks:
             url: '{? tpb.url ?}'
         - newtorrents: yes
     content_size:
-      max: 900
+      max: 500
       min: 20
 
   discover-movies:
+    limit_new: 2
     template:
       - movies
       - torrents
@@ -239,7 +242,7 @@ tasks:
         - trakt_list:
             username: '{? trakt.user ?}'
             account: '{? trakt.account ?}'
-            list: watchlist
+            list: '{? trakt.list.movies ?}'
             type: movies
       from:
         - rarbg:
@@ -253,7 +256,7 @@ tasks:
         - trakt_list:
             username: '{? trakt.user ?}'
             account: '{? trakt.account ?}'
-            list: Watchlist
+            list: '{? trakt.list.movies ?}'
             type: movies
     content_size:
       max: 4000
@@ -297,6 +300,7 @@ tasks:
         for_accepted: rm -rf "{{location}}"
 
   random-movies-listing:
+    limit_new: 2
     template:
       - rss-movies
       - torrents
@@ -339,6 +343,7 @@ tasks:
       - movie_list: random-movies
 
   random-movies-download:
+    limit_new: 2
     priority: 21
     template:
       - torrents
@@ -373,6 +378,7 @@ tasks:
       min: 20
 
   download-series-rss:
+    limit_new: 2
     template:
       - series
       - rss-tv
@@ -381,7 +387,7 @@ tasks:
       - reject
       - series-notify
     content_size:
-      max: 900
+      max: 500
       min: 20
 
   get-subs:
@@ -607,8 +613,8 @@ tasks:
         - trakt_list:
             username: '{? trakt.user ?}'
             account: '{? trakt.account ?}'
-            list: series-list
-            type: shows
+            list: '{? trakt.list.series ?}'
+            type: episodes
       action: accept
     move:
       to: "{? folder.series ?}/{{trakt_series_name}}/Season {{trakt_season}}"
@@ -623,7 +629,7 @@ tasks:
     next_trakt_episodes:
       account: '{? trakt.user ?}'
       context: collected
-      list: series-list
+      list: '{? trakt.list.series ?}'
     accept_all: yes
     set_series_begin: yes
 
