@@ -412,7 +412,6 @@ tasks:
       providers: 
         - opensubtitles
         - podnapisi
-        - addic7ed
         - tvsubtitles
       single: no
       hearing_impaired: yes
