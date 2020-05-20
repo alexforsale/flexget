@@ -101,10 +101,10 @@ templates:
   transmission-global:
     _transmission-settings: &transmission-settings
       enabled: yes
-      host: localhost
-      port: 9091
-      username: transmission
-      password: transmission
+      host: '{? transmission.host ?}'
+      port: '{? transmission.port ?}'
+      username: '{? transmission.username ?}'
+      password: '{? transmission.password ?}'
       ratio: 1
       include_subs: yes
       magnetization_timeout: 1
